@@ -92,7 +92,7 @@ wl-clipboard
 wlogout
 xdg-desktop-portal-hyprland
 xwaylandvideobridge
-yazi
+superfile-bin
 zoxide
 zram-generator
 zsh
