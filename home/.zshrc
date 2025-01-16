@@ -119,7 +119,7 @@ alias .5='cd ../../../../..'
 alias mkdir='mkdir -p'
 
 # Neovide
-alias nvid="~/neovide.sh"
+alias nvid="~/.config/nvim/scripts/nvid_launcher.sh"
 alias ms="/mnt/FastStorage/Java/CommandBridge/server.sh"
 
 # Powerlevel10k configuration
