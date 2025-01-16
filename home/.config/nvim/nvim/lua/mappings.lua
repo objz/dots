@@ -77,6 +77,7 @@ wk.add({
     { "<leader>vt", "<cmd>ToggleTerm<cr>",      desc = "Open new terminal" },
     { "<leader>vg", "<cmd>LazyGit<cr>",         desc = "Open git view" },
     { "<leader>vo", "<cmd>Lspsaga outline<cr>", desc = "Toggle LSP outline" },
+    { "<leader>vm", "<cmd>Markview splitToggle<cr>", desc = "Toggle Markdown preview" },
 })
 
 -- Utilities
