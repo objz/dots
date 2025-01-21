@@ -20,13 +20,13 @@ gradle-language-server
 grimblast-git
 gst-plugin-pipewire
 helvum
-hyprgraphics-git
+hyprgraphics
 hyprland
-hyprland-qtutils-git
+hyprland-qtutils
 hyprlock
 hyprpaper
 hyprpicker
-hyprpolkitagent-git
+hyprpolkitagent
 hyprshade
 hyprsunset
 intel-ucode
