@@ -2,8 +2,6 @@ acpi
 ark
 base
 base-devel
-cliphist
-discord-canary
 docker
 duf
 dunst
@@ -15,7 +13,6 @@ firefox-tridactyl
 flatpak
 fuzzel
 fzf
-git
 gradle-language-server
 grimblast-git
 gst-plugin-pipewire
@@ -61,7 +58,6 @@ nvidia-open-dkms
 nvidia-utils
 pamixer
 papirus-icon-theme
-paru
 pavucontrol
 pipewire
 pipewire-alsa
@@ -71,19 +67,10 @@ pulsemixer
 qt5-wayland
 socat
 steam
-swayidle
-swayosd-git
-swww
-ttf-anonymouspro-nerd
-ttf-fira-code
-ttf-font-awesome
 ttf-jetbrains-mono-nerd
-ttf-meslo-nerd
-ttf-ubuntu-nerd
 udiskie
 unzip
 uwsm
-waybar
 waypaper
 wireplumber
 wl-clipboard
