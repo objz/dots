@@ -1,5 +1,6 @@
 acpi
 ark
+rsync
 base
 base-devel
 docker
