@@ -1,16 +1,12 @@
 return {
-	"karb94/neoscroll.nvim",
-	config = function()
-		require("neoscroll").setup({
-			mappings = {
-				-- "<C-u>",
-				-- "<C-d>",
-				"<C-b>",
-				"<C-f>",
-				-- "zt",
-				-- "zz",
-				-- "zb",
-			},
-		})
-	end,
+    --Smoot scrolling
+  "karb94/neoscroll.nvim",
+  config = function()
+        require("neoscroll").setup({
+            mappings = {
+                "zz",
+                "zb",
+            }
+        })
+    end,
 }

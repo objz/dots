@@ -10,6 +10,24 @@ return {
 
 		-- Set proper Java executable
 		java_cmd = "/usr/lib/jvm/java-17-openjdk/bin/java"
+
+        local function detect_java()
+            if vim.fn.filereadable("build.gradle") == 1
+                or vim.fn.filereadable("build.gradle.kts") == 1
+                or vim.fn.filereadable("pom.xml") == 1
+            then
+                local output = vim.fn.system("grep -o 'java.toolchain.*17' build.gradle build.gradle.kts pom.xml | head -n 1")
+                if output:match("17") then
+                    return "/usr/lib/jvm/java-17-openjdk/bin/java"
+                end
+                local output21 = vim.fn.system("grep -o 'java.toolchain.*21' build.gradle build.gradle.kts pom.xml | head -n 1")
+                if output21:match("21") then
+                    return "/usr/lib/jvm/java-21-openjdk/bin/java"
+                end
+            end
+
+            return "/usr/lib/jvm/java-21-openjdk/bin/java"
+        end
 		mason_registry = require("mason-registry")
 
 		-- vim.fn.glob Is needed to set paths using wildcard (*)
@@ -32,7 +50,7 @@ return {
 
 		config = {
             cmd = {
-                java_cmd,
+                detect_java(),
                 "-Declipse.application=org.eclipse.jdt.ls.core.id1",
                 "-Dosgi.bundles.defaultStartLevel=4",
                 "-Declipse.product=org.eclipse.jdt.ls.core.product",

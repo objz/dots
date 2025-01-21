@@ -10,7 +10,7 @@ return {
 				sign_priority = 40,
 			},
 			symbol_in_winbar = {
-				enable = false,
+				enable = true,
 				separator = " › ",
 				hide_keyword = false,
 				ignore_patterns = nil,

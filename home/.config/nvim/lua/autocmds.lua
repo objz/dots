@@ -33,3 +33,6 @@ vim.filetype.add({
 		[".zshenv"] = "sh",
 	},
 })
+
+-- reopen kitty after close
+

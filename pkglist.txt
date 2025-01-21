@@ -83,3 +83,7 @@ zoxide
 zram-generator
 zsh
 pass
+meson
+cmake
+cpio
+pkg-config

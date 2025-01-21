@@ -1,4 +1,4 @@
-local capabilities = require("lsp.handlers").capabilities
+local capabilities = require("blink.cmp").get_lsp_capabilities()
 
 local _lspconfig, lspconfig = pcall(require, "lspconfig")
 if _lspconfig then
@@ -32,47 +32,52 @@ if _lspconfig then
 			},
 		},
 	})
-	-- Rust
-	lspconfig.rust_analyzer.setup({
-		on_attach = function(client, bufnr)
-			require("lsp.handlers").on_attach(client, bufnr)
-			-- vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-		end,
-		-- capabilities = capabilities,
-		settings = {
-			["rust-analyzer"] = {
-				diagnostics = {
-					enable = true,
-				},
-				imports = {
-					granularity = {
-						group = "module",
-					},
-					prefix = "self",
-				},
-				cargo = {
-					buildScripts = {
-						enable = true,
-					},
-				},
-				procMacro = {
-					enable = true,
-				},
-			},
-		},
-	})
+	-- -- Rust
+	-- lspconfig.rust_analyzer.setup({
+	-- 	on_attach = function(client, bufnr)
+	-- 		require("lsp.handlers").on_attach(client, bufnr)
+	-- 		-- vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+	-- 	end,
+	-- 	-- capabilities = capabilities,
+	-- 	settings = {
+	-- 		["rust-analyzer"] = {
+	-- 			diagnostics = {
+	-- 				enable = true,
+	-- 			},
+	-- 			imports = {
+	-- 				granularity = {
+	-- 					group = "module",
+	-- 				},
+	-- 				prefix = "self",
+	-- 			},
+	-- 			cargo = {
+	-- 				buildScripts = {
+	-- 					enable = true,
+	-- 				},
+	-- 			},
+	-- 			procMacro = {
+	-- 				enable = true,
+	-- 			},
+	-- 		},
+	-- 	},
+	-- })
 
 	-- Clangd (C++)
-	lspconfig.clangd.setup({})
+	lspconfig.clangd.setup({
+        cmd = { "clangd", "--offset-encoding=utf-16"},
+    })
+
+    -- Meson
+    lspconfig.meson.setup({})
 
 	-- Bash
 	lspconfig.bashls.setup({
-		autostart = false,
+		autostart = true,
 	})
 
 	-- Javascript/Typescript
 	lspconfig.eslint.setup({
-		autostart = true,
+		autostart = false,
 		capabilities = capabilities,
 		settings = {
 			packageManager = "npm",
@@ -117,9 +122,11 @@ if _lspconfig then
     -- Kotlin
     lspconfig.kotlin_language_server.setup({
         capabilities = capabilities,
+        autostart = false,
         on_attach = function(client, bufnr)
             require("lsp.handlers").on_attach(client, bufnr)
         end,
+        cmd = { "/home/consti/.local/share/nvim/mason/bin/kotlin-language-server"},
         root_dir = lspconfig.util.root_pattern("settings.gradle.kts", "build.gradle.kts", ".git"),
     })
 

@@ -10,11 +10,6 @@ return {
                 always_divide_middle = true,
                 globalstatus = true,
             },
-            sections = {
-                lualine_c = {
-                    "aerial",
-                },
-            },
         })
     end,
 }

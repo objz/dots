@@ -200,6 +200,16 @@ local themes = {
         end
     },
 
+    github_themes = {
+        "projekt0n/github-nvim-theme",
+            name = 'github-theme',
+            config = function ()
+               require("github-theme").setup({
+               })
+               vim.cmd('colorscheme github_dark')
+            end,
+    }
+
 }
 
 M.set_active_theme = function(theme_name)

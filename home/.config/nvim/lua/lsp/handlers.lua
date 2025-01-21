@@ -12,7 +12,7 @@ local signature_cfg = {
     hint_enable = false,     -- virtual hint enable
     hint_prefix = "🐼 ",   -- Panda for parameter
     hint_scheme = "String",
-    use_lspsaga = false,     -- set to true if you want to use lspsaga popup
+    use_lspsaga = true,     -- set to true if you want to use lspsaga popup
     hi_parameter = "Search", -- how your parameter will be highlight
     max_height = 12,         -- max height of signature floating_window, if content is more than max_height, you can scroll down
     -- to view the hiding contents
@@ -44,6 +44,6 @@ M.on_attach = function(client, bufnr)
     set_hover_border(client)
 end
 
-M.capabilities = require("cmp_nvim_lsp").default_capabilities()
+M.capabilities = require("blink.cmp").get_lsp_capabilities()
 -- M.capabilities = require('coq').lsp_ensure_capabilities()
 return M
