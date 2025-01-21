@@ -13,10 +13,12 @@ PARU_REPO="https://aur.archlinux.org/paru.git"
 echo "Cloning repository..."
 git clone "$REPO_URL" "$CLONE_DIR"
 
-# Step 2: Copy dotfiles and configs to the home directory
+# Step 2: Copy dotfiles and other scripts to the home directory
 echo "Copying dotfiles and configs to the home directory..."
-cp -r "$CLONE_DIR/home/.config" ~/
-cp -r "$CLONE_DIR/home/."* ~/
+# Copy normal (non-hidden) files
+cp -r "$CLONE_DIR/home/"* "$HOME"/
+# Copy hidden files/directories (excluding . and ..)
+cp -r "$CLONE_DIR/home/."??* "$HOME"/
 
 # Step 3: Clone and install paru
 if ! command -v paru &>/dev/null; then
@@ -40,15 +42,16 @@ fi
 
 # Step 5: Set the default shell to zsh
 echo "Setting zsh as the default shell..."
-if [ "$(basename "$SHELL")" != "zsh" ]; then
+CURRENT_SHELL=$(basename "$SHELL")
+if [ "$CURRENT_SHELL" != "zsh" ]; then
     chsh -s "$(which zsh)"
-    echo "Shell changed to zsh. It will take effect after reboot."
+    echo "Shell changed to zsh. It will take effect after a re-login."
 else
     echo "zsh is already the default shell."
 fi
 
-# Step 6: Reboot
+# Step 6: Reboot (optional)
 echo "Installation completed. Rebooting system in 10 seconds..."
-echo "You need to install oh-my-zsh after reboot manually!"
+echo "You may need to install or update oh-my-zsh after reboot."
 sleep 10
 sudo reboot
