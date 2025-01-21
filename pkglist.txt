@@ -2,7 +2,6 @@ acpi
 ark
 base
 base-devel
-cider-client
 cliphist
 discord-canary
 docker
@@ -63,7 +62,6 @@ nvidia-utils
 pamixer
 papirus-icon-theme
 paru
-paru-debug
 pavucontrol
 pipewire
 pipewire-alsa
