@@ -2,6 +2,7 @@ acpi
 ark
 rsync
 base
+btop
 base-devel
 docker
 duf
