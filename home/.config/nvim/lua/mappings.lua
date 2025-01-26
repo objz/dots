@@ -40,8 +40,8 @@ wk.add({
 
 -- Neoscroll and numToStr
 wk.add({
-    { "<s-j>", "<c-d>",                                   desc = "Keep cursor in the middle while scrolling down" },
-    { "<s-k>", "<c-u>",                                   desc = "Keep cursor in the middle while scrolling up" },
+    { "<c-j>", "<c-d>",                                   desc = "Keep cursor in the middle while scrolling down" },
+    { "<c-k>", "<c-u>",                                   desc = "Keep cursor in the middle while scrolling up" },
     { ".",     "<Plug>(comment_toggle_linewise_current)", desc = "Toggle line comment" },
 })
 
@@ -127,6 +127,8 @@ wk.add({
 -- Diagnostics
 wk.add({
     { "<leader>e",  group = "Errors and diagnostics" },
+    { "<leader>en", "<cmd>Lspsaga diagnostic_jump_next<cr>",    desc = "Jump to next diagnostic" },
+    { "<leader>ep", "<cmd>Lspsaga diagnostic_jump_prev<cr>",    desc = "Jump to previous diagnostic" },
     { "<leader>ef", "<cmd>Trouble quickfix toggle<cr>",    desc = "Toggle quick fixes view" },
     { "<leader>ed", "<cmd>Trouble diagnostics toggle<cr>", desc = "Toggle diagnostics view" },
 })
