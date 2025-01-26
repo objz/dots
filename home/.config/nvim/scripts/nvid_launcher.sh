@@ -1,19 +1,32 @@
 #!/usr/bin/env bash
 
 # This script will:
-#   - Remember the current directory
-#   - Start the helper script in the background (with the original arguments)
+#   - Use the current directory if no arguments are passed
+#   - Resolve the directory via zoxide if a partial path is provided
+#   - Allow explicit paths or arguments
+#   - Start the helper script in the background (with the resolved directory and arguments)
 #   - Kill the active Kitty window (or terminal) via hyprctl
 
-saved_dir="$PWD"
+if [[ -z "$1" ]]; then
+    saved_dir="$PWD"
+    args=(".")
+else
+    if zoxide query "$1" &>/dev/null; then
+        saved_dir=$(zoxide query "$1")
+    elif [[ -d "$1" ]]; then
+        saved_dir="$1"
+    else
+        saved_dir="$PWD"
+        args=("$@")
+    fi
 
-# Save all arguments in an array
-args=("$@")
+    if [[ -d "$saved_dir" ]]; then
+        args=("${@:2}")
+    fi
+fi
 
-# Run the helper in the background so it continues after we kill this kitty
 ~/.config/nvim/scripts/nvid_helper.sh "$saved_dir" "${args[@]}" &
 
-# Close the active window 
 TERMINAL_PID=$(hyprctl activewindow | grep "pid:" | awk '{print $2}')
 
 if [[ -n "$TERMINAL_PID" ]]; then
@@ -21,3 +34,4 @@ if [[ -n "$TERMINAL_PID" ]]; then
 else
     echo "No terminal window found to close."
 fi
+

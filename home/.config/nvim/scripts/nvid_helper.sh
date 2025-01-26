@@ -7,8 +7,6 @@
 saved_dir="$1"
 shift  
 
-# Start Neovide 
-neovide "$@"
+neovide "$saved_dir"
 
-# After Neovide is closed, open Kitty in that same directory
 kitty --directory "$saved_dir"
