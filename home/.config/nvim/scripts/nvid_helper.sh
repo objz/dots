@@ -7,6 +7,6 @@
 saved_dir="$1"
 shift  
 
-neovide "$saved_dir"
+neovide "$@"
 
 kitty --directory "$saved_dir"
