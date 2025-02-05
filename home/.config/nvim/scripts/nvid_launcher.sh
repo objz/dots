@@ -11,14 +11,18 @@ if [[ -z "$1" ]]; then
     saved_dir="$PWD"
     args=(".")
 else
-    if zoxide query "$1" &>/dev/null; then
+    if [[ -d "$PWD/$1" ]]; then
+        # Check if the folder exists in the current directory
+        saved_dir="$PWD/$1"
+        args=("$saved_dir")
+    elif zoxide query "$1" &>/dev/null; then
         # Resolve via zoxide
         saved_dir=$(zoxide query "$1")
         args=("$saved_dir")
     elif [[ -d "$1" ]]; then
         # If the input is a valid directory
         saved_dir="$1"
-        args=("$s1")
+        args=("$saved_dir")
     elif [[ -f "$1" ]]; then
         # If the input is a file, use its parent directory
         saved_dir=$(dirname "$(realpath "$1")")
@@ -43,5 +47,4 @@ if [[ -n "$TERMINAL_PID" ]]; then
 else
     echo "No terminal window found to close."
 fi
-
 
