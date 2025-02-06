@@ -70,7 +70,7 @@ if _notify then
 end
 
 -- session options
-vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+vim.o.sessionoptions = "blank,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
 -- UI theme
 require("theme").set_active_theme("sonokai")

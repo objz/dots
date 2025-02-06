@@ -13,6 +13,8 @@ return {
 					"rust_analyzer",
 					"lua_ls",
 					"bashls",
+                    "clangd",
+                    "jdtls"
 				},
 				automatic_installation = true,
 			})
@@ -32,6 +34,7 @@ return {
 					"javatest",
 					"javadbg",
 				},
+                automatic_installation = true
 			})
 		end,
 	},
