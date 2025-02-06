@@ -40,9 +40,9 @@ wk.add({
 
 -- Neoscroll and numToStr
 wk.add({
-    { "<c-j>", "<c-d>",                                   desc = "Keep cursor in the middle while scrolling down" },
-    { "<c-k>", "<c-u>",                                   desc = "Keep cursor in the middle while scrolling up" },
-    { ".",     "<Plug>(comment_toggle_linewise_current)", desc = "Toggle line comment" },
+    { "<s-j>", "<cmd>lua require('neoscroll').ctrl_d({ duration = 250, move_cursor = false })<cr>", desc = "Keep cursor in the middle while scrolling down" },
+    { "<s-k>", "<cmd>lua require('neoscroll').ctrl_u({ duration = 250, move_cursor = true, })<cr>", desc = "Keep cursor in the middle while scrolling up" },
+    { ".",     "<Plug>(comment_toggle_linewise_current)",                                           desc = "Toggle line comment" },
 })
 
 -- Buffer
@@ -73,19 +73,14 @@ wk.add({
 -- Views
 wk.add({
     { "<leader>v",  group = "Windows" },
-    { "<leader>vf", "<cmd>Neotree toggle<cr>",  desc = "Toggle file tree view" },
-    { "<leader>vt", "<cmd>ToggleTerm<cr>",      desc = "Open new terminal" },
-    { "<leader>vg", "<cmd>LazyGit<cr>",         desc = "Open git view" },
-    { "<leader>vo", "<cmd>Lspsaga outline<cr>", desc = "Toggle LSP outline" },
+    { "<leader>vf", "<cmd>Neotree toggle<cr>",       desc = "Toggle file tree view" },
+    { "<leader>vt", "<cmd>ToggleTerm<cr>",           desc = "Open new terminal" },
+    { "<leader>vg", "<cmd>LazyGit<cr>",              desc = "Open git view" },
+    { "<leader>vo", "<cmd>Lspsaga outline<cr>",      desc = "Toggle LSP outline" },
     { "<leader>vm", "<cmd>Markview splitToggle<cr>", desc = "Toggle Markdown preview" },
+    { "<leader>vd", "<cmd>Trouble todo toggle<cr>",          desc = "Toggle todo comment view" },
 })
 
--- Utilities
-wk.add({
-    { "<leader>t",  group = "Utilities" },
-    { "<leader>tt", "<cmd>Trouble todo toggle<cr>",   desc = "Toggle todo comment view" },
-    { "<leader>tm", "<cmd>RenderMarkdown toggle<cr>", desc = "Toggle Markdown rendering" },
-})
 
 -- Debug
 --[[ wk.add({
@@ -110,27 +105,22 @@ wk.add({
 
 -- Code navigation
 wk.add({
-    { "<leader>c",  group = "Code Navigation" },
-    { "<leader>ca", "<cmd>Lspsaga code_action<cr>",     desc = "Code Action" },
-    { "<leader>cd", "<cmd>Lspsaga peek_definition<cr>", desc = "Peek definition" },
-    { "<leader>cf", "<cmd>Lspsaga finder<cr>",          desc = "LSP search methods" },
-    { "<leader>ch", "<cmd>Lspsaga hover_doc<cr>",       desc = "Hover" },
-})
-
--- Refactoring
-wk.add({
-    { "<leader>r",  group = "Code Refactor" },
-    { "<leader>rf", "<cmd>lua require('conform').format({ async = true, lsp_fallback = true })<cr>", desc = "Format code", },
-    { "<leader>rr", "<cmd>Lspsaga rename<cr>",                                                       desc = "Rename" },
+    { "<leader>c",  group = "Code" },
+    { "<leader>ca", "<cmd>Lspsaga code_action<cr>",                                                  desc = "Code Action" },
+    { "<leader>cd", "<cmd>Lspsaga peek_definition<cr>",                                              desc = "Peek definition" },
+    { "<leader>cf", "<cmd>Lspsaga finder<cr>",                                                       desc = "LSP search references" },
+    { "<leader>ch", "<cmd>Lspsaga hover_doc<cr>",                                                    desc = "Hover" },
+    { "<leader>cc", "<cmd>lua require('conform').format({ async = true, lsp_fallback = true })<cr>", desc = "Format code", },
+    { "<leader>cr", "<cmd>Lspsaga rename<cr>",                                                       desc = "Rename" },
 })
 
 -- Diagnostics
 wk.add({
-    { "<leader>e",  group = "Errors and diagnostics" },
-    { "<leader>en", "<cmd>Lspsaga diagnostic_jump_next<cr>",    desc = "Jump to next diagnostic" },
-    { "<leader>ep", "<cmd>Lspsaga diagnostic_jump_prev<cr>",    desc = "Jump to previous diagnostic" },
-    { "<leader>ef", "<cmd>Trouble quickfix toggle<cr>",    desc = "Toggle quick fixes view" },
-    { "<leader>ed", "<cmd>Trouble diagnostics toggle<cr>", desc = "Toggle diagnostics view" },
+    { "<leader>d",  group = "Diagnostics" },
+    { "<leader>dn", "<cmd>Lspsaga diagnostic_jump_next<cr>", desc = "Jump to next diagnostic" },
+    { "<leader>dp", "<cmd>Lspsaga diagnostic_jump_prev<cr>", desc = "Jump to previous diagnostic" },
+    { "<leader>df", "<cmd>Trouble quickfix toggle<cr>",      desc = "Toggle quick fixes view" },
+    { "<leader>dd", "<cmd>Trouble diagnostics toggle<cr>",   desc = "Toggle diagnostics view" },
 })
 
 -- Insert mode

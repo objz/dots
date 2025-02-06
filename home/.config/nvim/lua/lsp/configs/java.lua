@@ -1,37 +1,20 @@
 return {
 	"mfussenegger/nvim-jdtls",
 	config = function()
-		jdtls = require("jdtls")
-		handlers = require("lsp.handlers")
+		local jdtls = require("jdtls")
+		local handlers = require("lsp.handlers")
 
-		share_dir = os.getenv("HOME") .. "/.local/share"
-		project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
-		workspace_dir = share_dir .. "/eclipse/" .. project_name
+		local share_dir = os.getenv("HOME") .. "/.local/share"
+		local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
+		local workspace_dir = share_dir .. "/eclipse/" .. project_name
 
 		-- Set proper Java executable
-		java_cmd = "/usr/lib/jvm/java-17-openjdk/bin/java"
+		local java_cmd = "/usr/bin/java"
 
-        local function detect_java()
-            if vim.fn.filereadable("build.gradle") == 1
-                or vim.fn.filereadable("build.gradle.kts") == 1
-                or vim.fn.filereadable("pom.xml") == 1
-            then
-                local output = vim.fn.system("grep -o 'java.toolchain.*17' build.gradle build.gradle.kts pom.xml | head -n 1")
-                if output:match("17") then
-                    return "/usr/lib/jvm/java-17-openjdk/bin/java"
-                end
-                local output21 = vim.fn.system("grep -o 'java.toolchain.*21' build.gradle build.gradle.kts pom.xml | head -n 1")
-                if output21:match("21") then
-                    return "/usr/lib/jvm/java-21-openjdk/bin/java"
-                end
-            end
-
-            return "/usr/lib/jvm/java-21-openjdk/bin/java"
-        end
-		mason_registry = require("mason-registry")
+		local mason_registry = require("mason-registry")
 
 		-- vim.fn.glob Is needed to set paths using wildcard (*)
-		bundles = {
+		local bundles = {
 			vim.fn.glob(
 				mason_registry.get_package("java-debug-adapter"):get_install_path()
 					.. "/extension/server/com.microsoft.java.debug.plugin-*.jar"
@@ -46,11 +29,11 @@ return {
 			)
 		)
 
-		jdtls_path = mason_registry.get_package("jdtls"):get_install_path()
+		local jdtls_path = mason_registry.get_package("jdtls"):get_install_path()
 
-		config = {
+		local config = {
             cmd = {
-                detect_java(),
+                java_cmd,
                 "-Declipse.application=org.eclipse.jdt.ls.core.id1",
                 "-Dosgi.bundles.defaultStartLevel=4",
                 "-Declipse.product=org.eclipse.jdt.ls.core.product",
@@ -92,13 +75,12 @@ return {
 				handlers.on_attach(client, bufnr)
 				if client.name == "jdtls" then
 					require("which-key").add({
-						{ "<leader>de", "<cmd>DapContinue<cr>", desc = "[JDLTS] Show debug configurations" },
-						{ "<leader>ro", "<cmd>lua require'jdtls'.organize_imports()<cr>", desc = "[JDLTS] Organize imports" },
+						-- { "<leader>de", "<cmd>DapContinue<cr>", desc = "[JDLTS] Show debug configurations" },
+						{ "<leader>co", "<cmd>lua require'jdtls'.organize_imports()<cr>", desc = "[JDLTS] Organize imports" },
 						{ "<leader>cs", "<cmd>lua require'jdtls'.super_implementation()<cr>", desc = "[JDLTS] Go to super implementation" },
 					})
 					jdtls = require("jdtls")
 					jdtls.setup_dap({ hotcodereplace = "auto" })
-					jdtls.setup.add_commands()
 					-- Auto-detect main and setup dap config
 					require("jdtls.dap").setup_dap_main_class_configs({
 						config_overrides = {

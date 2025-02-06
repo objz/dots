@@ -45,7 +45,7 @@ local plugins = {
     require("plugins.configs.bigfile"),     -- Big file management
     require("plugins.configs.suda"),        -- Sudo file reopen
     require("plugins.configs.autosession"), --Session restore
-    require("plugins.configs.dooing"),      -- Todo Plugin
+    -- require("plugins.configs.dooing"),      -- Todo Plugin
     "mg979/vim-visual-multi",               -- Multiply cursors
     "sitiom/nvim-numbertoggle",             -- Absolute line numbers
     "chrisgrieser/nvim-spider",             -- Motions

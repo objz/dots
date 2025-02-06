@@ -11,6 +11,10 @@ return {
             checkboxes = presets.checkboxes.nerd,
             headings = presets.headings.glow_center,
             horizontal_rules = presets.horizontal_rules.dotted,
+            preview = {
+                enable = false,
+                filetypes = { "md", "rmd", "quarto"},
+            },
             code_blocks = {
                 style = "language",
 
@@ -29,7 +33,6 @@ return {
                 sign = true,
                 sign_hl = nil
             },
-            modes = {"t"}, --somehow it does not work with {} so I need to use a no existend mode
         })
     end,
 

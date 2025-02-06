@@ -127,17 +127,17 @@ return {
 						handlers.on_attach(_, bufnr)
 						wk = require("which-key")
 						wk.add({
-							{ "<leader>dE", "<cmd>RustDebuggables<cr>", desc = "[RUST] Show debug configurations" },
-							{ "<leader>de", "<cmd>RustLastDebug<cr>", desc = "[RUST] Debug last" },
-							{ "<leader>dR", "<cmd>RustRun<cr>", desc = "[RUST] Show run configurations" },
-							{ "<leader>dr", "<cmd>RustLastRun<cr>", desc = "[RUST] Run last" },
+							-- { "<leader>dE", "<cmd>RustDebuggables<cr>", desc = "[RUST] Show debug configurations" },
+							-- { "<leader>de", "<cmd>RustLastDebug<cr>", desc = "[RUST] Debug last" },
+							-- { "<leader>dR", "<cmd>RustRun<cr>", desc = "[RUST] Show run configurations" },
+							-- { "<leader>dr", "<cmd>RustLastRun<cr>", desc = "[RUST] Run last" },
 						})
 					end,
 					capabilities = handlers.capabilities,
 					standalone = false,
 				},
 				dap = {
-					adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path),
+					-- adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path),
 				},
 			})
 		end,

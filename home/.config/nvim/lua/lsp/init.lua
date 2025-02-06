@@ -67,9 +67,6 @@ if _lspconfig then
         cmd = { "clangd", "--offset-encoding=utf-16"},
     })
 
-    -- Meson
-    lspconfig.meson.setup({})
-
 	-- Bash
 	lspconfig.bashls.setup({
 		autostart = true,
@@ -116,8 +113,6 @@ if _lspconfig then
 	-- XML
 	lspconfig.lemminx.setup({})
 
-	-- VUE
-	lspconfig.vuels.setup({})
 
     -- Kotlin
     lspconfig.kotlin_language_server.setup({
