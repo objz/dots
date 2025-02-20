@@ -35,6 +35,7 @@ local plugins = {
     "folke/which-key.nvim",                --Keymap viewer
     "rcarriga/nvim-notify",                --Popup notifications
     "folke/drop.nvim",                     --Screen saver
+    "boltlessengineer/sense.nvim",         --UI sense
 
     ---- Utilities
     require("plugins.configs.telescope"),   --Fuzzy finder
