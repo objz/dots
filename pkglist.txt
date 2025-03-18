@@ -88,3 +88,4 @@ meson
 cmake
 cpio
 pkg-config
+cliphist
