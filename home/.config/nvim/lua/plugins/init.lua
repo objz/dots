@@ -22,8 +22,9 @@ local theme = require("theme")
 local plugins = {
     ---- UI
     theme.get_active_theme(),
-    require("plugins.configs.alpha"),      --Start page
-    require("plugins.configs.neotree"),    --File Explorer
+    -- require("plugins.configs.alpha"),      --Start page
+    -- require("plugins.configs.neotree"),    --File Explorer
+    require("plugins.configs.snacks"),
     require("plugins.configs.lazygit"),    --Git UI
     require("plugins.configs.bufferline"), --Buffer tab view
     require("plugins.configs.neoscroll"),  --Smooth scrolling
@@ -33,7 +34,7 @@ local plugins = {
     require("plugins.configs.noice"),      --Notify plugin
     "onsails/lspkind.nvim",                --Code Popup icons
     "folke/which-key.nvim",                --Keymap viewer
-    "rcarriga/nvim-notify",                --Popup notifications
+    -- "rcarriga/nvim-notify",                --Popup notifications
     "folke/drop.nvim",                     --Screen saver
     "boltlessengineer/sense.nvim",         --UI sense
 
@@ -43,9 +44,9 @@ local plugins = {
     require("plugins.configs.toggleterm"),  --Terminal
     require("plugins.configs.comment"),     --Toggle comment
     require("plugins.configs.todo"),        -- Todo
-    require("plugins.configs.bigfile"),     -- Big file management
+    -- require("plugins.configs.bigfile"),     -- Big file management
     require("plugins.configs.suda"),        -- Sudo file reopen
-    require("plugins.configs.autosession"), --Session restore
+    -- require("plugins.configs.autosession"), --Session restore
     -- require("plugins.configs.dooing"),      -- Todo Plugin
     "mg979/vim-visual-multi",               -- Multiply cursors
     "sitiom/nvim-numbertoggle",             -- Absolute line numbers

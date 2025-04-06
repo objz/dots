@@ -59,6 +59,7 @@ vim.cmd [[filetype plugin indent on]]
 
 utils.set_indent_sizes { go = 4, python = 4, rust = 4, cpp = 4, c = 4, make = 4, lua = 4, java = 4, json = 4 }
 
+
 -- Space as leader key
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -70,7 +71,7 @@ if _notify then
 end
 
 -- session options
-vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+-- vim.o.sessionoptions = "blank,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
 -- UI theme
 require("theme").set_active_theme("sonokai")

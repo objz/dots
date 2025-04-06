@@ -73,12 +73,18 @@ wk.add({
 -- Views
 wk.add({
     { "<leader>v",  group = "Windows" },
-    { "<leader>vf", "<cmd>Neotree toggle<cr>",       desc = "Toggle file tree view" },
+    {
+        "<leader>vf",
+        function()
+            Snacks.explorer()
+        end,
+        desc = "Toggle file tree view"
+    },
     { "<leader>vt", "<cmd>ToggleTerm<cr>",           desc = "Open new terminal" },
     { "<leader>vg", "<cmd>LazyGit<cr>",              desc = "Open git view" },
     { "<leader>vo", "<cmd>Lspsaga outline<cr>",      desc = "Toggle LSP outline" },
     { "<leader>vm", "<cmd>Markview splitToggle<cr>", desc = "Toggle Markdown preview" },
-    { "<leader>vd", "<cmd>Trouble todo toggle<cr>",          desc = "Toggle todo comment view" },
+    { "<leader>vd", "<cmd>Trouble todo toggle<cr>",  desc = "Toggle todo comment view" },
 })
 
 

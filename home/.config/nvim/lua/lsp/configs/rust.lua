@@ -11,9 +11,6 @@ return {
         ft = { "rust", "toml" },
         config = function()
             local handlers = require("lsp.handlers")
-            local extension_path = require("mason-registry").get_package("codelldb"):get_install_path() .. "/extension/"
-            local codelldb_path = extension_path .. "adapter/codelldb"
-            local liblldb_path = extension_path .. "lldb/lib/liblldb.so"
             local rust_tools = require("rust-tools")
 
             rust_tools.setup({

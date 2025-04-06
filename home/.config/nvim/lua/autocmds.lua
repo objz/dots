@@ -11,7 +11,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 -- go to last loc when opening a buffer
-api.nvim_create_autocmd("BufReadPost", {
+--[[ api.nvim_create_autocmd("BufReadPost", {
 	callback = function()
 		local mark = vim.api.nvim_buf_get_mark(0, '"')
 		local lcount = vim.api.nvim_buf_line_count(0)
@@ -19,7 +19,7 @@ api.nvim_create_autocmd("BufReadPost", {
 			pcall(vim.api.nvim_win_set_cursor, 0, mark)
 		end
 	end,
-})
+}) ]]
 
 -- make zsh files recognized as sh for bash-ls & treesitter
 vim.filetype.add({
