@@ -26,4 +26,4 @@ curl -sL https://raw.githubusercontent.com/72-S/dots/main/install.sh | sh
 
 ## Notes
 - This setup is designed for a minimal, lightweight Hyprland environment.
-- This setup is for nvidia only!
+- For nvidia install the packages `lib32-nvidia-utils`, `nvidia-open-dkms` and `nvidia-utils`
