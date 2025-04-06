@@ -65,7 +65,6 @@ pipewire-pulse
 pulsemixer
 qt5-wayland
 socat
-steam
 ttf-jetbrains-mono-nerd
 udiskie
 unzip
