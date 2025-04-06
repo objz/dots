@@ -32,6 +32,7 @@ local plugins = {
     require("plugins.configs.lualine"),    --Custom Staus bar
     require("plugins.configs.markdown"),   --Markdown preview
     require("plugins.configs.noice"),      --Notify plugin
+    require("plugins.configs.windows"),
     "onsails/lspkind.nvim",                --Code Popup icons
     "folke/which-key.nvim",                --Keymap viewer
     -- "rcarriga/nvim-notify",                --Popup notifications
@@ -46,7 +47,7 @@ local plugins = {
     require("plugins.configs.todo"),        -- Todo
     -- require("plugins.configs.bigfile"),     -- Big file management
     require("plugins.configs.suda"),        -- Sudo file reopen
-    -- require("plugins.configs.autosession"), --Session restore
+    require("plugins.configs.autosession"), --Session restore
     -- require("plugins.configs.dooing"),      -- Todo Plugin
     "mg979/vim-visual-multi",               -- Multiply cursors
     "sitiom/nvim-numbertoggle",             -- Absolute line numbers

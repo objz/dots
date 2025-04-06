@@ -85,6 +85,9 @@ wk.add({
     { "<leader>vo", "<cmd>Lspsaga outline<cr>",      desc = "Toggle LSP outline" },
     { "<leader>vm", "<cmd>Markview splitToggle<cr>", desc = "Toggle Markdown preview" },
     { "<leader>vd", "<cmd>Trouble todo toggle<cr>",  desc = "Toggle todo comment view" },
+
+    { "<leader>vs", "<cmd>Split<cr>",  desc = "Split Window" },
+    { "<leader>vq", "<cmd>q<cr>",  desc = "Quit current Window" },
 })
 
 
