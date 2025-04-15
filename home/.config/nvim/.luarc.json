@@ -1,6 +1,8 @@
 {
     "diagnostics.globals": [
         "vim",
-        "wk"
+        "wk",
+        "theme",
+        "telescope"
     ]
 }

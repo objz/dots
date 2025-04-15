@@ -12,17 +12,16 @@ return {
     config = function()
         telescope = require("telescope")
         telescope.setup({
+            picker = {
+                hidden = true,
+            },
             defaults = {
                 borderchars = {
                     "╭", "─", "╮",
                     "│", "╯", "─",
                     "╰", "│"
                 },
-            },
-            picker = {
-                hidden = true,
-            },
-            defaults = {
+
                 vimgrep_arguments = {
                     "rg",
                     "--color=never",

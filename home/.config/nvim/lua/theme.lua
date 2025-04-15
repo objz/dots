@@ -195,7 +195,7 @@ local themes = {
     nvchad_themes = {
     "NvChad/nvchad_themes",
         config = function()
-            vim.cmd("colorscheme nvchad") 
+            vim.cmd("colorscheme nvchad")
             vim.g.nvchad_theme = "chocolate"
         end
     },
@@ -218,7 +218,7 @@ end
 
 M.get_active_theme =  function()
     theme = themes[M.theme_name]
-    theme.lazy = false 
+    theme.lazy = false
     theme.priority = 1000
     return theme
 end

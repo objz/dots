@@ -40,8 +40,10 @@ wk.add({
 
 -- Neoscroll and numToStr
 wk.add({
-    { "<s-j>", "<cmd>lua require('neoscroll').ctrl_d({ duration = 250, move_cursor = false })<cr>", desc = "Keep cursor in the middle while scrolling down" },
-    { "<s-k>", "<cmd>lua require('neoscroll').ctrl_u({ duration = 250, move_cursor = true, })<cr>", desc = "Keep cursor in the middle while scrolling up" },
+    -- { "<s-j>", "<cmd>lua require('neoscroll').scroll(-0.1, { duration = 50, move_cursor = false })<cr>", desc = "Keep cursor in the middle while scrolling down" },
+    -- { "<s-k>", "<cmd>lua require('neoscroll').scroll(0.1, { duration = 50, move_cursor = false, })<cr>", desc = "Keep cursor in the middle while scrolling up" },
+    { "<S-j>", "5j", desc = "Scroll 5 lines down"},
+    { "<S-k>", "5k", desc = "Scroll 5 lines up"},
     { ".",     "<Plug>(comment_toggle_linewise_current)",                                           desc = "Toggle line comment" },
 })
 

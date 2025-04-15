@@ -27,7 +27,7 @@ local plugins = {
     require("plugins.configs.snacks"),
     require("plugins.configs.lazygit"),    --Git UI
     require("plugins.configs.bufferline"), --Buffer tab view
-    require("plugins.configs.neoscroll"),  --Smooth scrolling
+    -- require("plugins.configs.neoscroll"),  --Smooth scrolling
     require("plugins.configs.trouble"),    --Diagnostics window
     require("plugins.configs.lualine"),    --Custom Staus bar
     require("plugins.configs.markdown"),   --Markdown preview
@@ -45,7 +45,6 @@ local plugins = {
     require("plugins.configs.toggleterm"),  --Terminal
     require("plugins.configs.comment"),     --Toggle comment
     require("plugins.configs.todo"),        -- Todo
-    -- require("plugins.configs.bigfile"),     -- Big file management
     require("plugins.configs.suda"),        -- Sudo file reopen
     require("plugins.configs.autosession"), --Session restore
     -- require("plugins.configs.dooing"),      -- Todo Plugin
