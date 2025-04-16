@@ -1,42 +1,96 @@
 * {
-	background-image: none;
-	box-shadow: none;
+    background-image: none;
+    font-size: 18px;
 }
 
 window {
-	background-color: rgba(12, 12, 12, 0.9);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 button {
-    border-radius: 0;
-    border-color: black;
-	text-decoration-color: #FFFFFF;
-    color: #FFFFFF;
-	background-color: #1E1E1E;
-	border-style: solid;
-	border-width: 1px;
-	background-repeat: no-repeat;
-	background-position: center;
-	background-size: 25%;
+    color: #ffffff;
+    background-color: rgba(20, 20, 20, 0.8);
+    outline-style: none;
+    border: none;
+    border-width: 0px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 10%;
+    border-radius: 0px;
+    box-shadow: none;
+    text-shadow: none;
+    animation: gradient_f 20s ease-in infinite;
 }
 
-button:focus, button:active, button:hover {
-	background-color: #3700B3;
-	outline-style: none;
+button:focus {
+    background-color: rgba(60, 60, 60, 0.8);
+    background-size: 20%;
+}
+
+button:hover {
+    background-color: rgba(100, 100, 100, 0.9);
+    background-size: 25%;
+    border-radius: 30px;
+    animation: gradient_f 20s ease-in infinite;
+    transition: all 0.3s cubic-bezier(.55,0.0,.28,1.682);
+}
+
+button:hover#lock {
+    border-radius: 30px 30px 0px 30px;
+    margin: 20px 0px 0px 20px;
+}
+
+button:hover#logout {
+    border-radius: 30px 0px 30px 30px;
+    margin: 0px 0px 20px 20px;
+}
+
+button:hover#shutdown {
+    border-radius: 30px 30px 30px 0px;
+    margin: 20px 20px 0px 0px;
+}
+
+button:hover#reboot {
+    border-radius: 0px 30px 30px 30px;
+    margin: 0px 20px 20px 0px;
 }
 
 #lock {
-    background-image: image(url("/usr/share/wlogout/icons/lock.png"), url("/usr/local/share/wlogout/icons/lock.png"));
+    background-image: image(
+        url("/home/consti/.config/wlogout/icons/lock_light.png"),
+        url("/usr/share/wlogout/icons/lock.png"),
+        url("/usr/local/share/wlogout/icons/lock.png")
+    );
+    border-radius: 20px 0px 0px 0px;
+    margin: 15px 0px 0px 15px;
 }
 
 #logout {
-    background-image: image(url("/usr/share/wlogout/icons/logout.png"), url("/usr/local/share/wlogout/icons/logout.png"));
+    background-image: image(
+        url("/home/consti/.config/wlogout/icons/logout_light.png"),
+        url("/usr/share/wlogout/icons/logout.png"),
+        url("/usr/local/share/wlogout/icons/logout.png")
+    );
+    border-radius: 0px 0px 0px 20px;
+    margin: 0px 0px 15px 15px;
 }
 
 #shutdown {
-    background-image: image(url("/usr/share/wlogout/icons/shutdown.png"), url("/usr/local/share/wlogout/icons/shutdown.png"));
+    background-image: image(
+        url("/home/consti/.config/wlogout/icons/shutdown_light.png"),
+        url("/usr/share/wlogout/icons/shutdown.png"),
+        url("/usr/local/share/wlogout/icons/shutdown.png")
+    );
+    border-radius: 0px 20px 0px 0px;
+    margin: 15px 15px 0px 0px;
 }
 
 #reboot {
-    background-image: image(url("/usr/share/wlogout/icons/reboot.png"), url("/usr/local/share/wlogout/icons/reboot.png"));
+    background-image: image(
+        url("/home/consti/.config/wlogout/icons/reboot_light.png"),
+        url("/usr/share/wlogout/icons/reboot.png"),
+        url("/usr/local/share/wlogout/icons/reboot.png")
+    );
+    border-radius: 0px 0px 20px 0px;
+    margin: 0px 15px 15px 0px;
 }
