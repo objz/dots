@@ -44,6 +44,12 @@ M.on_attach = function(client, bufnr)
     set_hover_border(client)
 end
 
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    pcall(vim.api.nvim_buf_del_keymap, args.buf, "n", "K")
+  end,
+})
+
 M.capabilities = require("blink.cmp").get_lsp_capabilities()
 -- M.capabilities = require('coq').lsp_ensure_capabilities()
 return M
