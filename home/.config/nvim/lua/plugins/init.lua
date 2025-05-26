@@ -5,14 +5,13 @@ if not vim.loop.fs_stat(lazypath) then
         "clone",
         "--filter=blob:none",
         "https://github.com/folke/lazy.nvim.git",
-        "--branch=stable", -- latest stable release
+        "--branch=stable",
         lazypath,
     })
 end
 vim.opt.rtp:prepend(lazypath)
 
 local ok, lazy = pcall(require, "lazy")
-
 if not ok then
     return
 end
@@ -22,59 +21,67 @@ local theme = require("theme")
 local plugins = {
     ---- UI
     theme.get_active_theme(),
-    -- require("plugins.configs.alpha"),      --Start page
-    -- require("plugins.configs.neotree"),    --File Explorer
     require("plugins.configs.snacks"),
-    require("plugins.configs.lazygit"),    --Git UI
-    require("plugins.configs.bufferline"), --Buffer tab view
-    -- require("plugins.configs.neoscroll"),  --Smooth scrolling
-    require("plugins.configs.trouble"),    --Diagnostics window
-    require("plugins.configs.lualine"),    --Custom Staus bar
-    require("plugins.configs.markdown"),   --Markdown preview
-    require("plugins.configs.noice"),      --Notify plugin
-    require("plugins.configs.windows"),
-    "onsails/lspkind.nvim",                --Code Popup icons
-    "folke/which-key.nvim",                --Keymap viewer
-    -- "rcarriga/nvim-notify",                --Popup notifications
-    "folke/drop.nvim",                     --Screen saver
-    "boltlessengineer/sense.nvim",         --UI sense
+    require("plugins.configs.lazygit"),    -- Git UI
+    require("plugins.configs.bufferline"), -- Buffer tab view
+    require("plugins.configs.lualine"),    -- Custom Status bar
+    require("plugins.configs.markdown"),   -- Markdown preview
+    require("plugins.configs.noice"),      -- Notify plugin
+    require("plugins.configs.split"),
+
+    ---- Core UI
+    "onsails/lspkind.nvim",                -- Code popup icons
+    require("plugins.configs.which-key"),                -- Keymap viewer
+    "boltlessengineer/sense.nvim",         -- UI sense
 
     ---- Utilities
-    require("plugins.configs.telescope"),   --Fuzzy finder
-    require("plugins.configs.autopairs"),   --Brackets close
-    require("plugins.configs.toggleterm"),  --Terminal
-    require("plugins.configs.comment"),     --Toggle comment
-    require("plugins.configs.todo"),        -- Todo
-    require("plugins.configs.suda"),        -- Sudo file reopen
-    require("plugins.configs.autosession"), --Session restore
-    -- require("plugins.configs.dooing"),      -- Todo Plugin
-    "mg979/vim-visual-multi",               -- Multiply cursors
+    require("plugins.configs.telescope"),   -- Fuzzy finder
+    require("plugins.configs.autopairs"),   -- Brackets close
+    require("plugins.configs.toggleterm"),  -- Terminal
+    require("plugins.configs.autosession"), -- Session restore
+    require("plugins.configs.mini-icons"),  -- Icons
+    require("plugins.configs.surround"),    -- Surround operations
+    "mg979/vim-visual-multi",               -- Multiple cursors
     "sitiom/nvim-numbertoggle",             -- Absolute line numbers
-    "chrisgrieser/nvim-spider",             -- Motions
-
-    ---- Code
-    require("plugins.configs.lspsaga"),  -- LSP Gui
-    require("plugins.configs.colorful"), -- Colorfull Blink.cmp
-    require("plugins.configs.refactor"), -- Refactoring tools
-    require("plugins.configs.conform"),  -- Formatting tool
 
     ---- LSP/DAP
-    require("plugins.configs.mason"),     -- LSP installer
-    require("plugins.configs.lspconfig"), -- LSP server
-    -- custom dap servers
+    require("plugins.configs.mason"),       -- LSP installer
+    require("plugins.configs.treesitter"),  -- Syntax highlighting
 
-    -- require("lsp.configs.dap"),
-    require("lsp.configs.java"),
-    require("lsp.configs.rust"),
+    ---- Completion (nvim-cmp stack)
+    require("plugins.configs.cmp"),
 
-    ---- Snippets
-    "L3MON4D3/LuaSnip",             -- Snippet engine
-    "rafamadriz/friendly-snippets", -- Prebuilt snippets
+    ---- Formatting / Linting
+    "nvimtools/none-ls.nvim",
+    "jay-babu/mason-null-ls.nvim",
 
-    ---- Completion
-    require("plugins.configs.lspsignature"), -- Function signature support
-    require("plugins.configs.copilot"),      -- Copilot autocompletion
-    require("plugins.configs.blink"),        -- Code Completion
+    ---- LSP Core
+    "neovim/nvim-lspconfig",
+    {
+        "nvimdev/lspsaga.nvim",
+        config = function()
+            require("lspsaga").setup({
+                ui = {
+                    border = "rounded",
+                    code_action = "",
+                },
+                lightbulb = {
+                    enable = false,
+                },
+            })
+        end,
+    },
+
+    ---- Extras
+    "xzbdmw/colorful-menu.nvim",
+    "numToStr/Comment.nvim",
+    "ray-x/lsp_signature.nvim",
+    "lambdalisue/suda.vim",
+    "folke/todo-comments.nvim",
+    "folke/trouble.nvim",
+    
+    ---- Enhanced formatting
+    require("plugins.configs.conform"),
 }
 
 lazy.setup(plugins)

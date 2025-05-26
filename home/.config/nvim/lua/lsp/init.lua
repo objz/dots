@@ -1,138 +1,208 @@
-local capabilities = require("blink.cmp").get_lsp_capabilities()
+local function safe_require(module)
+    local ok, result = pcall(require, module)
+    if not ok then
+        vim.notify("LSP: Failed to load " .. module, vim.log.levels.WARN)
+        return nil
+    end
+    return result
+end
 
-local _lspconfig, lspconfig = pcall(require, "lspconfig")
-if _lspconfig then
-	-- Python
-	lspconfig.pyright.setup({
-		autostart = false,
-		capabilities = capabilities,
-	})
+local mason_lspconfig = safe_require("mason-lspconfig")
+local lspconfig = safe_require("lspconfig")
+local cmp_nvim_lsp = safe_require("cmp_nvim_lsp")
 
-	-- LUA
-	lspconfig.lua_ls.setup({
-		autostart = false,
-		settings = {
-			Lua = {
-				runtime = {
-					-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-					version = "LuaJIT",
-				},
-				diagnostics = {
-					-- Get the language server to recognize the `vim` global
-					globals = { "vim" },
-				},
-				workspace = {
-					-- Make the server aware of Neovim runtime files
-					library = vim.api.nvim_get_runtime_file("", true),
-				},
-				-- Do not send telemetry data containing a randomized but unique identifier
-				telemetry = {
-					enable = false,
-				},
-			},
-		},
-	})
-	-- -- Rust
-	-- lspconfig.rust_analyzer.setup({
-	-- 	on_attach = function(client, bufnr)
-	-- 		require("lsp.handlers").on_attach(client, bufnr)
-	-- 		-- vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-	-- 	end,
-	-- 	-- capabilities = capabilities,
-	-- 	settings = {
-	-- 		["rust-analyzer"] = {
-	-- 			diagnostics = {
-	-- 				enable = true,
-	-- 			},
-	-- 			imports = {
-	-- 				granularity = {
-	-- 					group = "module",
-	-- 				},
-	-- 				prefix = "self",
-	-- 			},
-	-- 			cargo = {
-	-- 				buildScripts = {
-	-- 					enable = true,
-	-- 				},
-	-- 			},
-	-- 			procMacro = {
-	-- 				enable = true,
-	-- 			},
-	-- 		},
-	-- 	},
-	-- })
+if not mason_lspconfig or not lspconfig or not cmp_nvim_lsp then
+    vim.notify("LSP: Required modules not available, skipping LSP setup", vim.log.levels.WARN)
+    return
+end
 
-	-- Clangd (C++)
-	lspconfig.clangd.setup({
-        cmd = { "clangd", "--offset-encoding=utf-16"},
-    })
+local capabilities = cmp_nvim_lsp.default_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+capabilities.textDocument.completion.completionItem.resolveSupport = {
+    properties = { "documentation", "detail", "additionalTextEdits" }
+}
 
-	-- Bash
-	lspconfig.bashls.setup({
-		autostart = true,
-	})
+local on_attach = function(client, bufnr)
+    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+    local ok, lsp_signature = pcall(require, "lsp_signature")
+    if ok then
+        lsp_signature.on_attach({
+            bind = true,
+            handler_opts = {
+                border = "rounded"
+            }
+        }, bufnr)
+    end
+end
 
-	-- Javascript/Typescript
-	lspconfig.eslint.setup({
-		autostart = false,
-		capabilities = capabilities,
-		settings = {
-			packageManager = "npm",
-		},
-		on_attach = function(client, bufnr)
-			vim.api.nvim_create_autocmd("BufWritePre", {
-				buffer = bufnr,
-				command = "EslintFixAll",
-			})
-		end,
-	})
+local servers = {
+    -- Rust
+    rust_analyzer = {
+        settings = {
+            ["rust-analyzer"] = {
+                cargo = {
+                    allFeatures = true,
+                    loadOutDirsFromCheck = true,
+                    runBuildScripts = true,
+                },
+                checkOnSave = {
+                    allFeatures = true,
+                    command = "clippy",
+                    extraArgs = { "--no-deps" },
+                },
+                procMacro = {
+                    enable = true,
+                    ignored = {
+                        ["async-trait"] = { "async_trait" },
+                        ["napi-derive"] = { "napi" },
+                        ["async-recursion"] = { "async_recursion" },
+                    },
+                },
+            },
+        },
+    },
+    
+    -- C/C++
+    clangd = {
+        cmd = {
+            "clangd",
+            "--background-index",
+            "--clang-tidy",
+            "--header-insertion=iwyu",
+            "--completion-style=detailed",
+            "--function-arg-placeholders",
+            "--fallback-style=llvm",
+        },
+        init_options = {
+            usePlaceholders = true,
+            completeUnimported = true,
+            clangdFileStatus = true,
+        },
+    },
+    
+    -- Lua
+    lua_ls = {
+        settings = {
+            Lua = {
+                runtime = {
+                    version = "LuaJIT",
+                },
+                diagnostics = {
+                    globals = { "vim" },
+                },
+                workspace = {
+                    library = vim.api.nvim_get_runtime_file("", true),
+                    checkThirdParty = false,
+                },
+                telemetry = {
+                    enable = false,
+                },
+                format = {
+                    enable = true,
+                    defaultConfig = {
+                        indent_style = "space",
+                        indent_size = "4",
+                    }
+                },
+            },
+        },
+    },
+    
+    -- Bash
+    bashls = {
+        filetypes = { "sh", "bash", "zsh" },
+    },
+    
+    -- Python
+    pyright = {
+        settings = {
+            python = {
+                analysis = {
+                    autoSearchPaths = true,
+                    diagnosticMode = "workspace",
+                    useLibraryCodeForTypes = true,
+                },
+            },
+        },
+    },
+    
+    -- TypeScript/JavaScript
+    ts_ls = {
+        settings = {
+            typescript = {
+                inlayHints = {
+                    includeInlayParameterNameHints = "all",
+                    includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                    includeInlayFunctionParameterTypeHints = true,
+                    includeInlayVariableTypeHints = true,
+                    includeInlayPropertyDeclarationTypeHints = true,
+                    includeInlayFunctionLikeReturnTypeHints = true,
+                    includeInlayEnumMemberValueHints = true,
+                },
+            },
+            javascript = {
+                inlayHints = {
+                    includeInlayParameterNameHints = "all",
+                    includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                    includeInlayFunctionParameterTypeHints = true,
+                    includeInlayVariableTypeHints = true,
+                    includeInlayPropertyDeclarationTypeHints = true,
+                    includeInlayFunctionLikeReturnTypeHints = true,
+                    includeInlayEnumMemberValueHints = true,
+                },
+            },
+        },
+    },
+}
 
-	-- HTML
-	lspconfig.html.setup({
-		autostart = false,
-		capabilities = capabilities,
-	})
+local function setup_lsp_servers()
+    if mason_lspconfig.setup_handlers then
+        mason_lspconfig.setup_handlers({
+            function(server_name)
+                local server_config = servers[server_name] or {}
+                server_config.capabilities = capabilities
+                server_config.on_attach = on_attach
+                lspconfig[server_name].setup(server_config)
+            end,
+        })
+    else
+        vim.notify("LSP: Using fallback server setup", vim.log.levels.INFO)
+        for server_name, server_config in pairs(servers) do
+            if vim.fn.executable(server_name:gsub("_", "-")) == 1 then
+                server_config.capabilities = capabilities
+                server_config.on_attach = on_attach
+                lspconfig[server_name].setup(server_config)
+            end
+        end
+    end
+end
 
-	-- CSS
-	lspconfig.cssls.setup({
-		autostart = false,
-		capabilities = capabilities,
-	})
+vim.api.nvim_create_autocmd("User", {
+    pattern = "LazyDone",
+    callback = function()
+        vim.schedule(function()
+            setup_lsp_servers()
+        end)
+    end,
+})
 
-	-- Dockerfile
-	lspconfig.dockerls.setup({
-		autostart = false,
-		capabilities = capabilities,
-	})
+vim.diagnostic.config({
+    virtual_text = {
+        prefix = "●",
+        source = "if_many",
+    },
+    float = {
+        source = "always",
+        border = "rounded",
+    },
+    signs = true,
+    underline = true,
+    update_in_insert = false,
+    severity_sort = true,
+})
 
-	-- Docker compose
-	lspconfig.docker_compose_language_service.setup({
-		autostart = false,
-		capabilities = capabilities,
-	})
-	-- XML
-	lspconfig.lemminx.setup({})
-
-
-    -- Kotlin
-    lspconfig.kotlin_language_server.setup({
-        capabilities = capabilities,
-        autostart = false,
-        on_attach = function(client, bufnr)
-            require("lsp.handlers").on_attach(client, bufnr)
-        end,
-        cmd = { "/home/consti/.local/share/nvim/mason/bin/kotlin-language-server"},
-        root_dir = lspconfig.util.root_pattern("settings.gradle.kts", "build.gradle.kts", ".git"),
-    })
-
-    -- Gradle
-    lspconfig.gradle_ls.setup({
-        capabilities = capabilities,
-        on_attach = function(client, bufnr)
-            require("lsp.handlers").on_attach(client, bufnr)
-        end,
-        cmd = { "/home/consti/.local/share/nvim/mason/bin/gradle-language-server"},
-        root_dir = lspconfig.util.root_pattern("settings.gradle.kts", "build.gradle.kts", ".git"),
-    })
-
+local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+for type, icon in pairs(signs) do
+    local hl = "DiagnosticSign" .. type
+    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end

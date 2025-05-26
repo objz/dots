@@ -1,5 +1,4 @@
 return {
-	-- Autoclose brackets, parentheses...
 	"windwp/nvim-autopairs",
 	config = function()
 		require("nvim-autopairs").setup({
@@ -14,7 +13,7 @@ return {
             enable_bracket_in_quote = true,
             enable_abbr = false,
             break_undo = true,
-            check_ts = true, -- Requires Tree-sitter installed
+            check_ts = true,
             map_cr = true,
             map_bs = true,
         })

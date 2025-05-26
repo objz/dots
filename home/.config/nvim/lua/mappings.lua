@@ -4,7 +4,6 @@ if not ok then
     return
 end
 
--- Space as leader key
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
@@ -25,7 +24,6 @@ wk.add({
     { "c",     '"_c',  desc = "Do not copy when changing" },
     { "C",     '"_C',  desc = "Do not copy when changing" },
     { "cc",    '"_cc', desc = "Do not copy when changing" },
-
     { "H",     "^",    desc = "Move to first character of line" },
     { "L",     "$",    desc = "Move to last character of line" },
 })
@@ -38,16 +36,14 @@ wk.add({
     { "<a-O>", "maO<ESC>`a",   desc = "New line before in normal mode" },
 })
 
--- Neoscroll and numToStr
+-- Scrolling and commenting
 wk.add({
-    -- { "<s-j>", "<cmd>lua require('neoscroll').scroll(-0.1, { duration = 50, move_cursor = false })<cr>", desc = "Keep cursor in the middle while scrolling down" },
-    -- { "<s-k>", "<cmd>lua require('neoscroll').scroll(0.1, { duration = 50, move_cursor = false, })<cr>", desc = "Keep cursor in the middle while scrolling up" },
     { "<S-j>", "5j", desc = "Scroll 5 lines down"},
     { "<S-k>", "5k", desc = "Scroll 5 lines up"},
-    { ".",     "<Plug>(comment_toggle_linewise_current)",                                           desc = "Toggle line comment" },
+    { ".",     "<Plug>(comment_toggle_linewise_current)", desc = "Toggle line comment" },
 })
 
--- Buffer
+-- Buffer management
 wk.add({
     { "<a-left>",  "<cmd>BufferLineCyclePrev<cr>", desc = "Go previous buffer" },
     { "<a-right>", "<cmd>BufferLineCycleNext<cr>", desc = "Go next buffer" },
@@ -60,21 +56,22 @@ wk.add({
     { "|", "za", desc = "Toggle folds" },
 })
 
--- Find
+-- Find & Search
 wk.add({
-    { "<leader>f",  group = "Find" },
+    { "<leader>f",  group = "Find & Search" },
     { "<leader>ff", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "Search in current buffer" },
-    { "<leader>fa", "<cmd>Telescope grep_string<cr>",               desc = "Search for files systemwide" },
-    { "<leader>fg", "<cmd>Telescope live_grep<cr>",                 desc = "Search by content systemwide" },
+    { "<leader>fa", "<cmd>Telescope grep_string<cr>",               desc = "Search for word under cursor" },
+    { "<leader>fg", "<cmd>Telescope live_grep<cr>",                 desc = "Live grep in workspace" },
     { "<leader>fr", "<cmd>Telescope oldfiles<cr>",                  desc = "Recent files" },
-    { "<leader>ft", "<cmd>TodoTelescope<cr>",                       desc = "Find TODOs" },
     { "<leader>fc", "<cmd>Telescope command_history<cr>",           desc = "Command history" },
     { "<leader>fz", "<cmd>Telescope zoxide list<cr>",               desc = "Recent directories" },
+    { "<leader>fb", "<cmd>Telescope buffers<cr>",                   desc = "Open buffers" },
+    { "<leader>fh", "<cmd>Telescope help_tags<cr>",                 desc = "Help tags" },
 })
 
--- Views
+-- Views & Windows
 wk.add({
-    { "<leader>v",  group = "Windows" },
+    { "<leader>v",  group = "Views & Windows" },
     {
         "<leader>vf",
         function()
@@ -83,58 +80,69 @@ wk.add({
         desc = "Toggle file tree view"
     },
     { "<leader>vt", "<cmd>ToggleTerm<cr>",           desc = "Open new terminal" },
-    { "<leader>vg", "<cmd>LazyGit<cr>",              desc = "Open git view" },
     { "<leader>vo", "<cmd>Lspsaga outline<cr>",      desc = "Toggle LSP outline" },
     { "<leader>vm", "<cmd>Markview splitToggle<cr>", desc = "Toggle Markdown preview" },
     { "<leader>vd", "<cmd>Trouble todo toggle<cr>",  desc = "Toggle todo comment view" },
-
-    { "<leader>vs", "<cmd>Split<cr>",  desc = "Split Window" },
-    { "<leader>vq", "<cmd>q<cr>",  desc = "Quit current Window" },
+    { "<leader>vs", "<cmd>Split<cr>",                desc = "Split Window" },
+    { "<leader>vq", "<cmd>q<cr>",                    desc = "Quit current Window" },
 })
 
-
--- Debug
---[[ wk.add({
-    { "<leader>d",  group = "Debug" },
-    { "<leader>dR", "<cmd>lua require'dap'.run()<cr>",                                                         desc = "[DAP] Run" },
-    { "<leader>de", "<cmd>lua require'dap'.run_last()<cr>",                                                    desc = "[DAP] Debug last" },
-    { "<leader>dE", "<cmd>Telescope dap configurations<cr>",                                                   desc = "[DAP] Show debug configurations" },
-    { "<leader>dk", "<cmd>DapTerminate<cr>",                                                                   desc = "[DAP] Terminate" },
-    { "<leader>db", "<cmd>DapToggleBreakpoint<cr>",                                                            desc = "[DAP] Toggle breakpoint" },
-    { "<leader>dB", "<cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<cr>",        desc = "[DAP] Set conditional breakpoint", },
-    { "<leader>dl", "<cmd>lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<cr>", desc = "[DAP] Set log point breakpoint", },
-    { "<leader>dc", "<cmd>DapContinue<cr",                                                                     desc = "[DAP] Continue" },
-    { "<leader>dv", "<cmd>DapStepOver<cr>",                                                                    desc = "[DAP] Step oVer" },
-    { "<leader>di", "<cmd>DapStepInto<cr>",                                                                    desc = "[DAP] Step Into" },
-    { "<leader>do", "<cmd>DapStepOut<cr>",                                                                     desc = "[DAP] Step Out" },
-    { "<leader>dx", "<cmd>lua require('dapui').eval()<cr>",                                                    desc = "[DAPUI] eXecute}" },
-    { "<leader>dp", "<cmd>DapToggleRepl<cr>",                                                                  desc = "[DAP] Repl open" },
-    { "<leader>du", "<cmd>lua require'dapui'.toggle()<cr>",                                                    desc = "[DAPUI] Toggle debugging UI" },
-    { "<leader>ds", "<cmd>Telescope dap list_breakpoints<cr>",                                                 desc = "[TELESCOPE DAP] Show all breakpoints" },
-    { "<leader>dw", "<cmd>Telescope dap variables<cr>",                                                        desc = "[TELESCOPE DAP] Wariables" },
-}) ]]
-
--- Code navigation
+-- Code & LSP (unified group)
 wk.add({
-    { "<leader>c",  group = "Code" },
-    { "<leader>ca", "<cmd>Lspsaga code_action<cr>",                                                  desc = "Code Action" },
-    { "<leader>cd", "<cmd>Lspsaga peek_definition<cr>",                                              desc = "Peek definition" },
-    { "<leader>cf", "<cmd>Lspsaga finder<cr>",                                                       desc = "LSP search references" },
-    { "<leader>ch", "<cmd>Lspsaga hover_doc<cr>",                                                    desc = "Hover" },
-    { "<leader>cc", "<cmd>lua require('conform').format({ async = true, lsp_fallback = true })<cr>", desc = "Format code", },
-    { "<leader>cr", "<cmd>Lspsaga rename<cr>",                                                       desc = "Rename" },
+    { "<leader>c",  group = "Code & LSP" },
+    { "<leader>ca", vim.lsp.buf.code_action,                                                        desc = "Code Action" },
+    { "<leader>cd", vim.lsp.buf.definition,                                                         desc = "Go to Definition" },
+    { "<leader>cD", vim.lsp.buf.declaration,                                                        desc = "Go to Declaration" },
+    { "<leader>cf", vim.lsp.buf.references,                                                         desc = "Find References" },
+    { "<leader>ch", vim.lsp.buf.hover,                                                              desc = "Hover Documentation" },
+    { "<leader>cc", "<cmd>lua require('conform').format({ async = true, lsp_fallback = true })<cr>", desc = "Format Code" },
+    { "<leader>cr", vim.lsp.buf.rename,                                                             desc = "Rename Symbol" },
+    { "<leader>ci", vim.lsp.buf.implementation,                                                     desc = "Go to Implementation" },
+    { "<leader>ct", vim.lsp.buf.type_definition,                                                    desc = "Go to Type Definition" },
+    { "<leader>cs", vim.lsp.buf.signature_help,                                                     desc = "Signature Help" },
+    { "<leader>cw", vim.lsp.buf.workspace_symbol,                                                   desc = "Workspace Symbols" },
+    { "<leader>cl", vim.lsp.codelens.run,                                                           desc = "Run Code Lens" },
+    { "<leader>cL", vim.lsp.codelens.refresh,                                                       desc = "Refresh Code Lens" },
 })
 
 -- Diagnostics
 wk.add({
     { "<leader>d",  group = "Diagnostics" },
-    { "<leader>dn", "<cmd>Lspsaga diagnostic_jump_next<cr>", desc = "Jump to next diagnostic" },
-    { "<leader>dp", "<cmd>Lspsaga diagnostic_jump_prev<cr>", desc = "Jump to previous diagnostic" },
-    { "<leader>df", "<cmd>Trouble quickfix toggle<cr>",      desc = "Toggle quick fixes view" },
-    { "<leader>dd", "<cmd>Trouble diagnostics toggle<cr>",   desc = "Toggle diagnostics view" },
+    { "<leader>dn", vim.diagnostic.goto_next,              desc = "Next Diagnostic" },
+    { "<leader>dp", vim.diagnostic.goto_prev,              desc = "Previous Diagnostic" },
+    { "<leader>dl", vim.diagnostic.open_float,             desc = "Show Line Diagnostics" },
+    { "<leader>dq", vim.diagnostic.setqflist,              desc = "Diagnostics to Quickfix" },
+    { "<leader>dw", vim.diagnostic.setloclist,             desc = "Diagnostics to Location List" },
+    { "<leader>df", "<cmd>Trouble quickfix toggle<cr>",    desc = "Toggle Quickfix View" },
+    { "<leader>dd", "<cmd>Trouble diagnostics toggle<cr>", desc = "Toggle Diagnostics View" },
+    { "<leader>dt", "<cmd>Trouble todo toggle<cr>",        desc = "Toggle TODO View" },
 })
 
--- Insert mode
+-- Git operations (unified group)
+wk.add({
+    { "<leader>g",  group = "Git" },
+    { "<leader>gg", "<cmd>LazyGit<cr>",                  desc = "LazyGit" },
+    { "<leader>gb", "<cmd>Telescope git_branches<cr>",  desc = "Git Branches" },
+    { "<leader>gc", "<cmd>Telescope git_commits<cr>",   desc = "Git Commits" },
+    { "<leader>gs", "<cmd>Telescope git_status<cr>",    desc = "Git Status" },
+    { "<leader>gf", "<cmd>Telescope git_files<cr>",     desc = "Git Files" },
+})
+
+-- Text Operations
+wk.add({
+    { "ys", desc = "Add surround (motion + char)" },
+    { "yss", desc = "Surround entire line" },
+    { "ds", desc = "Delete surround (char)" },
+    { "cs", desc = "Change surround (old + new)" },
+}, { mode = "n" })
+
+
+wk.add({
+    mode = { "v" },
+    { "S", desc = "Surround selection" },
+})
+
+-- Insert mode mappings
 wk.add({
     mode = { "i" },
     { "<a-b>", "<C-o>b",              desc = "Move to previous word" },
@@ -143,18 +151,40 @@ wk.add({
     { "<a-d>", '<C-o>"_diw',          desc = "Delete word" },
     { "<a-j>", "<ESC>:m .+1<cr>==gi", desc = "Move block down" },
     { "<a-k>", "<ESC>:m .-2<cr>==gi", desc = "Move block up" },
+    { "<C-h>", vim.lsp.buf.signature_help, desc = "Signature Help" },
 })
 
--- Visual mode
+-- Visual mode mappings
 wk.add({
     mode = { "v" },
     { "v", "^o$",                                      desc = "Select current line" },
-    { "<", "<gv",                                      desc = "[Indent] Indent left" },
-    { ">", ">gv",                                      desc = "[Indent] Indent right" },
+    { "<", "<gv",                                      desc = "Indent left" },
+    { ">", ">gv",                                      desc = "Indent right" },
     { "x", '"+d',                                      desc = "Cut to system clipboard" },
     { "y", '"+y',                                      desc = "Copy to system clipboard" },
     { "p", '"+p',                                      desc = "Paste from system clipboard" },
     { ".", "<Plug>(comment_toggle_blockwise_current)", desc = "Toggle block comment" },
+    { "<leader>ca", vim.lsp.buf.code_action,          desc = "Code Action (Range)" },
 })
 
-wk.setup({})
+-- Session management
+wk.add({
+    { "<leader>s",  group = "Session" },
+    { "<leader>ss", "<cmd>SessionSave<cr>",           desc = "Save Session" },
+    { "<leader>sr", "<cmd>SessionRestore<cr>",        desc = "Restore Session" },
+    { "<leader>sd", "<cmd>SessionDelete<cr>",         desc = "Delete Session" },
+    { "<leader>sf", "<cmd>Telescope session-lens search_session<cr>", desc = "Find Sessions" },
+})
+
+-- Plugin management
+wk.add({
+    { "<leader>p",  group = "Plugins" },
+    { "<leader>pi", "<cmd>Lazy install<cr>",  desc = "Install Plugins" },
+    { "<leader>ps", "<cmd>Lazy sync<cr>",     desc = "Sync Plugins" },
+    { "<leader>pu", "<cmd>Lazy update<cr>",   desc = "Update Plugins" },
+    { "<leader>pc", "<cmd>Lazy clean<cr>",    desc = "Clean Plugins" },
+    { "<leader>pl", "<cmd>Lazy log<cr>",      desc = "Plugin Log" },
+    { "<leader>ph", "<cmd>Lazy home<cr>",     desc = "Lazy Home" },
+    { "<leader>pm", "<cmd>Mason<cr>",         desc = "Mason" },
+})
+

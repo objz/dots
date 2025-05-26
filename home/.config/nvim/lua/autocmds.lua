@@ -21,11 +21,10 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 }) ]]
 
--- make zsh files recognized as sh for bash-ls & treesitter
 vim.filetype.add({
 	extension = {
 		zsh = "sh",
-		sh = "sh", -- force sh-files with zsh-shebang to still get sh as filetype
+		sh = "sh",
 	},
 	filename = {
 		[".zshrc"] = "sh",
@@ -34,5 +33,21 @@ vim.filetype.add({
 	},
 })
 
--- reopen kitty after close
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    pcall(vim.api.nvim_buf_del_keymap, args.buf, "n", "K")
+  end,
+})
 
+-- Command aliases for common typos
+vim.api.nvim_create_user_command('Qa', 'qa', {})
+vim.api.nvim_create_user_command('QA', 'qa', {})
+vim.api.nvim_create_user_command('Qall', 'qall', {})
+vim.api.nvim_create_user_command('QAll', 'qall', {})
+vim.api.nvim_create_user_command('QALL', 'qall', {})
+vim.api.nvim_create_user_command('W', 'w', {})
+vim.api.nvim_create_user_command('Wq', 'wq', {})
+vim.api.nvim_create_user_command('WQ', 'wq', {})
+vim.api.nvim_create_user_command('Wqa', 'wqa', {})
+vim.api.nvim_create_user_command('WQa', 'wqa', {})
+vim.api.nvim_create_user_command('WQA', 'wqa', {})

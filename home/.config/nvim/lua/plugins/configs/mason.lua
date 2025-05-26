@@ -1,41 +1,56 @@
 return {
-	{
-		"williamboman/mason.nvim",
-		config = function()
-			require("mason").setup()
-		end,
-	},
-	{
-		"williamboman/mason-lspconfig.nvim",
-		config = function()
-			require("mason-lspconfig").setup({
-				ensure_installed = {
-					"rust_analyzer",
-					"lua_ls",
-					"bashls",
+    {
+        "williamboman/mason.nvim",
+        config = function()
+            require("mason").setup({
+                ui = {
+                    border = "rounded",
+                    icons = {
+                        package_installed = "✓",
+                        package_pending = "➜",
+                        package_uninstalled = "✗"
+                    }
+                }
+            })
+        end,
+    },
+    {
+        "williamboman/mason-lspconfig.nvim",
+        config = function()
+            require("mason-lspconfig").setup({
+                ensure_installed = {
+                    "rust_analyzer",
+                    "lua_ls",
+                    "bashls",
                     "clangd",
-                    "jdtls"
-				},
-				automatic_installation = true,
-			})
-		end,
-	},
-	{
-		"williamboman/mason-nvim-dap.nvim",
-		dependencies = {
-			"williamboman/mason.nvim",
-			"mfussenegger/nvim-dap",
-			"jay-babu/mason-nvim-dap.nvim",
-		},
-		config = function()
-			require("mason-nvim-dap").setup({
-				ensure_installed = {
-					"codelldb",
-					"javatest",
-					"javadbg",
-				},
-                automatic_installation = true
-			})
-		end,
-	},
+                    "jdtls",
+                    "pyright",
+                    "ts_ls",
+                },
+                automatic_installation = true,
+            })
+        end,
+    },
+    {
+        "jay-babu/mason-null-ls.nvim",
+        dependencies = {
+            "williamboman/mason.nvim",
+            "nvimtools/none-ls.nvim",
+        },
+        config = function()
+            require("mason-null-ls").setup({
+                ensure_installed = {
+                    "stylua",
+                    "rustfmt",
+                    "clang-format",
+                    "prettier",
+                    "black",
+                    "isort",
+                    "eslint_d",
+                },
+                automatic_installation = true,
+                handlers = {},
+            })
+        end,
+    },
 }

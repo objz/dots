@@ -1,5 +1,4 @@
 return {
-    -- GIT GUI
     "kdheepak/lazygit.nvim",
     lazy = true,
     dependencies = {

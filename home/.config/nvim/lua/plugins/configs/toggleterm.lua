@@ -17,8 +17,8 @@ return {
 			open_mapping = [[<leader>vt]],
 			insert_mappings = false,
 			direction = "float",
-			close_on_exit = true, -- close the terminal window when the process exits
-			shell = "/usr/bin/zsh", -- change the default shell
+			close_on_exit = false,
+			shell = "/usr/bin/zsh",
 		})
 	end,
 }
