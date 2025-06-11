@@ -15,7 +15,6 @@ firefox-tridactyl
 flatpak
 fuzzel
 fzf
-gradle-language-server
 grimblast-git
 gst-plugin-pipewire
 helvum
@@ -32,17 +31,12 @@ intel-ucode
 jaq
 jdk21-openjdk
 kitty
-kotlin-language-server
 libpulse
 light
 limine
 linux
 linux-firmware
 linux-headers
-linux-lts
-linux-lts-headers
-linux-zen
-linux-zen-headers
 man-db
 mpc
 mpd
