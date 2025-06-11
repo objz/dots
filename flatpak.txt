@@ -1,2 +1,0 @@
-com.core447.StreamController
-com.github.tchx84.Flatseal
