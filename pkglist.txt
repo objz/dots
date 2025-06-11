@@ -57,6 +57,7 @@ pipewire-alsa
 pipewire-jack
 pipewire-pulse
 pulsemixer
+playerctl
 qt5-wayland
 socat
 ttf-jetbrains-mono-nerd
