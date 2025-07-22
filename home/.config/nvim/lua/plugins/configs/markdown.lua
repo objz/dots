@@ -8,6 +8,9 @@ return {
     config = function()
         local presets = require("markview.presets")
         require("markview").setup({
+            experimental = {
+                check_rtp = false,
+            },
             markdown = {
                 headings = presets.headings.glow_center,
                 horizontal_rules = presets.horizontal_rules.dotted,

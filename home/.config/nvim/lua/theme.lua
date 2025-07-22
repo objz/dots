@@ -33,20 +33,20 @@ M.colors = {
     grey19 = "#020203"
 }
 
-local function loadNoClownFiesta()
-    vim.cmd [[colorscheme no-clown-fiesta]]
-    require("no-clown-fiesta").setup({
-        transparent = false, -- Enable this to disable the bg color
-        styles = {
-            -- You can set any of the style values specified for `:h nvim_set_hl`
-            comments = {},
-            keywords = {},
-            functions = {},
-            variables = {},
-            type = { bold = true },
-        },
-    })
-end
+-- local function loadNoClownFiesta()
+--     vim.cmd [[colorscheme no-clown-fiesta]]
+--     require("no-clown-fiesta").setup({
+--         transparent = false, -- Enable this to disable the bg color
+--         styles = {
+--             -- You can set any of the style values specified for `:h nvim_set_hl`
+--             comments = {},
+--             keywords = {},
+--             functions = {},
+--             variables = {},
+--             type = { bold = true },
+--         },
+--     })
+-- end
 
 local themes = {
     onenord = {
@@ -217,7 +217,7 @@ M.set_active_theme = function(theme_name)
 end
 
 M.get_active_theme =  function()
-    theme = themes[M.theme_name]
+    local theme = themes[M.theme_name]
     theme.lazy = false
     theme.priority = 1000
     return theme

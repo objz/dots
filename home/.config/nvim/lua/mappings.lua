@@ -103,11 +103,6 @@ wk.add({
 		desc = "Go to Definition",
 	},
 	{
-		"<leader>cD",
-		vim.lsp.buf.declaration,
-		desc = "Go to Declaration",
-	},
-	{
 		"<leader>cf",
 		vim.lsp.buf.references,
 		desc = "Find References",
@@ -128,34 +123,9 @@ wk.add({
 		desc = "Rename Symbol",
 	},
 	{
-		"<leader>ci",
-		vim.lsp.buf.implementation,
-		desc = "Go to Implementation",
-	},
-	{
-		"<leader>ct",
-		vim.lsp.buf.type_definition,
-		desc = "Go to Type Definition",
-	},
-	{
-		"<leader>cs",
-		vim.lsp.buf.signature_help,
-		desc = "Signature Help",
-	},
-	{
 		"<leader>cw",
 		vim.lsp.buf.workspace_symbol,
 		desc = "Workspace Symbols",
-	},
-	{
-		"<leader>cl",
-		vim.lsp.codelens.run,
-		desc = "Run Code Lens",
-	},
-	{
-		"<leader>cL",
-		vim.lsp.codelens.refresh,
-		desc = "Refresh Code Lens",
 	},
 })
 

@@ -8,7 +8,7 @@ return {
         "nvim-telescope/telescope.nvim",
     },
     config = function()
-        telescope = require("telescope")
+        local telescope = require("telescope")
         telescope.setup({
             picker = {
                 hidden = true,
