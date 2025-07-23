@@ -37,7 +37,7 @@ local plugins = {
 	---- Utilities
 	require("plugins.configs.telescope"), -- Fuzzy finder
 	require("plugins.configs.autopairs"), -- Brackets close
-	require("plugins.configs.toggleterm"), -- Terminal
+    require("plugins.configs.multiterm"), -- Improved terminal toggle
 	-- require("plugins.configs.autosession"), -- Session restore
 	require("plugins.configs.mini-icons"), -- Icons
 	require("plugins.configs.surround"), -- Surround operations
@@ -66,6 +66,7 @@ local plugins = {
 	"lambdalisue/suda.vim",
 	"folke/todo-comments.nvim",
 	"folke/trouble.nvim",
+    "wurli/urlpreview.nvim",
 
     ---- Language Servers
     require("lsp.configs.java"),

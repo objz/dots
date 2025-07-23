@@ -81,7 +81,7 @@ wk.add({
 		end,
 		desc = "Toggle file tree view",
 	},
-	{ "<leader>vt", "<cmd>ToggleTerm<cr>", desc = "Open new terminal" },
+	{ "<S-F7>", "<Plug>(MultitermList)<Plug>", desc = "List terminals" },
 	{ "<leader>vo", "<cmd>Lspsaga outline<cr>", desc = "Toggle LSP outline" },
 	{ "<leader>vm", "<cmd>Markview splitToggle<cr>", desc = "Toggle Markdown preview" },
 	{ "<leader>vd", "<cmd>Trouble todo toggle<cr>", desc = "Toggle todo comment view" },
