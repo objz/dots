@@ -41,6 +41,7 @@ local plugins = {
 	-- require("plugins.configs.autosession"), -- Session restore
 	require("plugins.configs.mini-icons"), -- Icons
 	require("plugins.configs.surround"), -- Surround operations
+    require("plugins.configs.urlpreview"), -- URL preview
 	"mg979/vim-visual-multi", -- Multiple cursors
 	"sitiom/nvim-numbertoggle", -- Absolute line numbers
 
@@ -66,7 +67,8 @@ local plugins = {
 	"lambdalisue/suda.vim",
 	"folke/todo-comments.nvim",
 	"folke/trouble.nvim",
-    "wurli/urlpreview.nvim",
+    "aznhe21/actions-preview.nvim",
+    require("plugins.configs.goto"), -- Markdown view
 
     ---- Language Servers
     require("lsp.configs.java"),

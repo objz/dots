@@ -71,12 +71,19 @@ return {
       on_attach = function(client, bufnr)
         handlers.on_attach(client, bufnr)
           if client.name == "jdtls" then
-          require("which-key").register({
-            ["<leader>co"] = { "<cmd>lua require'jdtls'.organize_imports()<CR>", "JDTLS: Organize Imports" },
-            ["<leader>cs"] = { "<cmd>lua require'jdtls'.super_implementation()<CR>", "JDTLS: Super Implementation" },
-            ["<leader>pr"] = { "<cmd>LspRestart<CR>",                        "JDTLS: Restart Server" },
-            ["<leader>pU"] = { "<cmd>JdtUpdateConfig<CR>",                   "JDTLS: Update Config" },
-          }, {
+          require("which-key").add({
+	        { "<leader>l", group = "LSP Actions" },
+	        { "<leader>lo", "<cmd>lua require'jdtls'.organize_imports()<cr>", desc = "Organize Imports" },
+	        { "<leader>ls", "<cmd>lua require'jdtls'.super_implementation()<cr>", desc = "Super Implementation" },
+	        { "<leader>lr", "<cmd>LspRestart<cr>", desc = "Restart Server" },
+	        { "<leader>lu", "<cmd>JdtUpdateConfig<cr>", desc = "Update Config" },
+	        { "<leader>r", group = "Run Configurations" },
+            { "<leader>rd", "<cmd>9Multiterm ./gradlew dev<cr>", desc = "gradlew dev" },
+            { "<leader>rb", "<cmd>9Multiterm ./gradlew build<cr>", desc = "gradlew build" },
+            { "<leader>rs", "<cmd>9Multiterm ./gradlew shadowJar<cr>", desc = "gradlew shadowJar" },
+            { "<leader>rm", "<cmd>9Multiterm ./gradlew modrinth<cr>", desc = "gradlew modrinth" },
+          },
+          {
             buffer = bufnr,
           })
         end

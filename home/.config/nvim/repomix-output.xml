@@ -60,13 +60,14 @@ lua/
       markdown.lua
       mason.lua
       mini-icons.lua
+      multiterm.lua
       noice.lua
       snacks.lua
       split.lua
       surround.lua
       telescope.lua
-      toggleterm.lua
       treesitter.lua
+      urlpreview.lua
       which-key.lua
     init.lua
   autocmds.lua
@@ -157,17 +158,21 @@ return {
       end,
       on_attach = function(client, bufnr)
         handlers.on_attach(client, bufnr)
-        if client.name == "jdtls" then
-          require("which-key").register({
-          { "<leader>co", "<cmd>lua require'jdtls'.organize_imports()<CR>", buffer = 7, desc = "JDTLS: Organize Imports" },
-          { "<leader>cs", "<cmd>lua require'jdtls'.super_implementation()<CR>", buffer = 7, desc = "JDTLS: Super Implementation" },
-          { "<leader>pr", "<cmd>LspRestart<CR>", buffer = 7, desc = "JDTLS: Restart Server" },
-          { "<leader>pU", "<cmd>JdtUpdateConfig<CR>", buffer = 7, desc = "JDTLS: Update Config" },
-          }, { buffer = bufnr })
+          if client.name == "jdtls" then
+          require("which-key").add({
+	        { "<leader>j", group = "JDTLS" },
+	        { "<leader>jo", "<cmd>lua require'jdtls'.organize_imports()<cr>", desc = "Organize Imports" },
+	        { "<leader>js", "<cmd>lua require'jdtls'.super_implementation()<cr>", desc = "Super Implementation" },
+	        { "<leader>jR", "<cmd>LspRestart<cr>", desc = "Restart Server" },
+	        { "<leader>ju", "<cmd>JdtUpdateConfig<cr>", desc = "Update Config" },
+	        { "<leader>jr", group = "Run Configurations" },
+            { "<leader>jrd", "<cmd>9Multiterm ./gradlew dev<cr>", desc = "gradlew dev" },
+            { "<leader>jrb", "<cmd>9Multiterm ./gradlew build<cr>", desc = "gradlew build" },
+            { "<leader>jrs", "<cmd>9Multiterm ./gradlew shadowJar<cr>", desc = "gradlew shadowJar" },
+            { "<leader>jrm", "<cmd>9Multiterm ./gradlew modrinth<cr>", desc = "gradlew modrinth" },
 
-          jdtls.setup_dap({ hotcodereplace = "auto" })
-          require("jdtls.dap").setup_dap_main_class_configs({
-            config_overrides = { vmArgs = "-Dspring.profiles.active=local" },
+          }, {
+            buffer = bufnr,
           })
         end
       end,
@@ -339,7 +344,7 @@ return {
 
 
                         handlers.on_attach(_, bufnr)
-                        wk = require("which-key")
+                        local wk = require("which-key")
                         wk.add({
                             -- { "<leader>dE", "<cmd>RustDebuggables<cr>", desc = "[RUST] Show debug configurations" },
                             -- { "<leader>de", "<cmd>RustLastDebug<cr>", desc = "[RUST] Debug last" },
@@ -1039,6 +1044,46 @@ return {
 }
 </file>
 
+<file path="lua/plugins/configs/multiterm.lua">
+return {
+    "objz/multiterm.nvim",
+	config = function()
+		require("multiterm").setup({})
+
+		local function toggle_term(tag)
+			if vim.fn.mode() == "t" then
+				vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, false, true), "n", false)
+			end
+			vim.cmd(tag .. "Multiterm")
+		end
+
+		local function f6_handler()
+			local mode = vim.fn.mode()
+			local buftype = vim.bo.buftype
+
+			if mode == "t" or buftype == "terminal" then
+				if mode == "t" then
+					vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, false, true), "n", false)
+				end
+				vim.cmd("Multiterm")
+				return
+			end
+
+			local c = vim.fn.getchar()
+			local k = vim.fn.nr2char(c)
+
+			if k:match("[1-9]") then
+				toggle_term(k)
+			else
+				toggle_term("1")
+			end
+		end
+
+		vim.keymap.set({ "n", "t", "i", "v" }, "<F6>", f6_handler, { desc = "F6 (+1-9) Toggle terminal" })
+	end,
+}
+</file>
+
 <file path="lua/plugins/configs/noice.lua">
 return {
     "folke/noice.nvim",
@@ -1139,7 +1184,7 @@ return {
         "nvim-telescope/telescope.nvim",
     },
     config = function()
-        telescope = require("telescope")
+        local telescope = require("telescope")
         telescope.setup({
             picker = {
                 hidden = true,
@@ -1218,33 +1263,6 @@ return {
 }
 </file>
 
-<file path="lua/plugins/configs/toggleterm.lua">
-return {
-	--- Improved terminal toggle
-	"akinsho/toggleterm.nvim",
-	version = "v2.*",
-	config = function()
-		require("toggleterm").setup({
-			size = function(term)
-				if term.direction == "horizontal" then
-					return 15
-				elseif term.direction == "vertical" then
-					return vim.o.columns * 0.4
-				end
-			end,
-            float_opts = {
-                border = "rounded",
-            },
-			open_mapping = [[<leader>vt]],
-			insert_mappings = false,
-			direction = "float",
-			close_on_exit = false,
-			shell = "/usr/bin/zsh",
-		})
-	end,
-}
-</file>
-
 <file path="lua/plugins/configs/treesitter.lua">
 return {
     "nvim-treesitter/nvim-treesitter",
@@ -1268,6 +1286,20 @@ return {
             },
         })
     end,
+}
+</file>
+
+<file path="lua/plugins/configs/urlpreview.lua">
+return {
+    "wurli/urlpreview.nvim",
+    opts = {
+        auto_preview = true,
+        max_window_width = 100,
+        hl_group_title = "@markup.heading",
+        hl_group_description = "@markup.quote",
+        hl_group_url = "Underlined",
+        window_border = "none"
+    }
 }
 </file>
 
@@ -1420,10 +1452,11 @@ local plugins = {
 	---- Utilities
 	require("plugins.configs.telescope"), -- Fuzzy finder
 	require("plugins.configs.autopairs"), -- Brackets close
-	require("plugins.configs.toggleterm"), -- Terminal
+    require("plugins.configs.multiterm"), -- Improved terminal toggle
 	-- require("plugins.configs.autosession"), -- Session restore
 	require("plugins.configs.mini-icons"), -- Icons
 	require("plugins.configs.surround"), -- Surround operations
+    require("plugins.configs.urlpreview"), -- URL preview
 	"mg979/vim-visual-multi", -- Multiple cursors
 	"sitiom/nvim-numbertoggle", -- Absolute line numbers
 
@@ -1449,6 +1482,7 @@ local plugins = {
 	"lambdalisue/suda.vim",
 	"folke/todo-comments.nvim",
 	"folke/trouble.nvim",
+    
 
     ---- Language Servers
     require("lsp.configs.java"),
@@ -1495,24 +1529,24 @@ vim.filetype.add({
 	},
 })
 
-vim.api.nvim_create_autocmd("LspAttach", {
-	callback = function(args)
-		pcall(vim.api.nvim_buf_del_keymap, args.buf, "n", "K")
-	end,
-})
+-- vim.api.nvim_create_autocmd("LspAttach", {
+-- 	callback = function(args)
+-- 		pcall(vim.api.nvim_buf_del_keymap, args.buf, "n", "K")
+-- 	end,
+-- })
 
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost" }, {
-	callback = function()
-		vim.defer_fn(function()
-			for _, client in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
-				if client.server_capabilities.codeLensProvider then
-					vim.lsp.codelens.refresh()
-					return
-				end
-			end
-		end, 100)
-	end,
-})
+-- vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost" }, {
+-- 	callback = function()
+-- 		vim.defer_fn(function()
+-- 			for _, client in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
+-- 				if client.server_capabilities.codeLensProvider then
+-- 					vim.lsp.codelens.refresh()
+-- 					return
+-- 				end
+-- 			end
+-- 		end, 100)
+-- 	end,
+-- })
 
 
 -- Command aliases for common typos
@@ -1613,7 +1647,8 @@ wk.add({
 		end,
 		desc = "Toggle file tree view",
 	},
-	{ "<leader>vt", "<cmd>ToggleTerm<cr>", desc = "Open new terminal" },
+	{ "<S-F6>", "<Plug>(MultitermList)<Plug>", desc = "List terminals" },
+	{ "<C-F6>", "<Plug>(MultitermKillCurrent)<Plug>", desc = "Kill terminal" },
 	{ "<leader>vo", "<cmd>Lspsaga outline<cr>", desc = "Toggle LSP outline" },
 	{ "<leader>vm", "<cmd>Markview splitToggle<cr>", desc = "Toggle Markdown preview" },
 	{ "<leader>vd", "<cmd>Trouble todo toggle<cr>", desc = "Toggle todo comment view" },
@@ -1803,6 +1838,8 @@ vim.cmd [[filetype plugin indent on]]
 
 utils.set_indent_sizes { go = 4, python = 4, rust = 4, cpp = 4, c = 4, make = 4, lua = 4, java = 4, json = 4 }
 
+vim.opt.guifont = "JetBrainsMono Nerd Font Mono:h9"
+
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -1853,20 +1890,20 @@ M.colors = {
     grey19 = "#020203"
 }
 
-local function loadNoClownFiesta()
-    vim.cmd [[colorscheme no-clown-fiesta]]
-    require("no-clown-fiesta").setup({
-        transparent = false, -- Enable this to disable the bg color
-        styles = {
-            -- You can set any of the style values specified for `:h nvim_set_hl`
-            comments = {},
-            keywords = {},
-            functions = {},
-            variables = {},
-            type = { bold = true },
-        },
-    })
-end
+-- local function loadNoClownFiesta()
+--     vim.cmd [[colorscheme no-clown-fiesta]]
+--     require("no-clown-fiesta").setup({
+--         transparent = false, -- Enable this to disable the bg color
+--         styles = {
+--             -- You can set any of the style values specified for `:h nvim_set_hl`
+--             comments = {},
+--             keywords = {},
+--             functions = {},
+--             variables = {},
+--             type = { bold = true },
+--         },
+--     })
+-- end
 
 local themes = {
     onenord = {
@@ -2037,7 +2074,7 @@ M.set_active_theme = function(theme_name)
 end
 
 M.get_active_theme =  function()
-    theme = themes[M.theme_name]
+    local theme = themes[M.theme_name]
     theme.lazy = false
     theme.priority = 1000
     return theme
@@ -2207,9 +2244,9 @@ vim.api.nvim_create_autocmd("VimResized", {
 <file path="lazy-lock.json">
 {
   "Comment.nvim": { "branch": "master", "commit": "e30b7f2008e52442154b66f7c519bfd2f1e32acb" },
-  "LuaSnip": { "branch": "master", "commit": "eda5be8f0ce9816278671f0b578cdbb8b762c701" },
+  "LuaSnip": { "branch": "master", "commit": "3d5bced1b9ae69fa3f9b1942e28af5dbc537f946" },
   "autosplit.nvim": { "branch": "main", "commit": "d98e381d5e436382c575faeeafc4f41c9c263a03" },
-  "blink.cmp": { "branch": "main", "commit": "586ee87534f5bf65f1c8dea2d1da2a57e8cddd36" },
+  "blink.cmp": { "branch": "main", "commit": "796a00e861a0872ad6452bc8a2faf250abf59117" },
   "bufdelete.nvim": { "branch": "master", "commit": "f6bcea78afb3060b198125256f897040538bcb81" },
   "bufferline.nvim": { "branch": "main", "commit": "655133c3b4c3e5e05ec549b9f8cc2894ac6f51b3" },
   "cmp-buffer": { "branch": "main", "commit": "b74fab3656eea9de20a9b8116afa3cfc4ec09657" },
@@ -2218,48 +2255,48 @@ vim.api.nvim_create_autocmd("VimResized", {
   "cmp-path": { "branch": "main", "commit": "e52e640b7befd8113b3350f46e8cfcfe98fcf730" },
   "cmp_luasnip": { "branch": "master", "commit": "98d9cb5c2c38532bd9bdb481067b20fea8f32e90" },
   "colorful-menu.nvim": { "branch": "master", "commit": "bc3e82609f2fcf7dad7ca87c20e65e51d5d9d87c" },
-  "conform.nvim": { "branch": "master", "commit": "f54259518695178168fbad442468e25f121230d4" },
-  "copilot.vim": { "branch": "release", "commit": "3955014c503b0cd7b30bc56c86c56c0736ca0951" },
+  "conform.nvim": { "branch": "master", "commit": "973f3cb73887d510321653044791d7937c7ec0fa" },
+  "copilot.vim": { "branch": "release", "commit": "12995dffe10282b29b8335650bf3e7457f4870e7" },
   "crates.nvim": { "branch": "main", "commit": "8437522d12a8c523da2aee9db2979d070b2ecc33" },
   "friendly-snippets": { "branch": "main", "commit": "572f5660cf05f8cd8834e096d7b4c921ba18e175" },
-  "hererocks": { "branch": "master", "commit": "4ce92131e9858950440ab99a25db9a9b43db8cd4" },
+  "hererocks": { "branch": "master", "commit": "f4cc0b16619b9d9d59c92636c5b5e7c06dc7c082" },
   "lazy.nvim": { "branch": "main", "commit": "6c3bda4aca61a13a9c63f1c1d1b16b9d3be90d7a" },
-  "lazygit.nvim": { "branch": "main", "commit": "4839ab642962cc76bb1bf278427dc4c59be15072" },
+  "lazygit.nvim": { "branch": "main", "commit": "cdd3527e251f96eb0527162b156ad839286fcd97" },
   "lsp_signature.nvim": { "branch": "master", "commit": "2b30d8582126a12a493b737e9761969eb869a05b" },
   "lspkind.nvim": { "branch": "master", "commit": "d79a1c3299ad0ef94e255d045bed9fa26025dab6" },
-  "lspsaga.nvim": { "branch": "main", "commit": "8efe00d6aed9db6449969f889170f1a7e43101a1" },
   "lualine.nvim": { "branch": "master", "commit": "a94fc68960665e54408fe37dcf573193c4ce82c9" },
-  "markview.nvim": { "branch": "main", "commit": "6777699a7a007d3e33ce383db9567dcb5645615a" },
-  "mason-lspconfig.nvim": { "branch": "main", "commit": "c4c84f4521d62de595c0d0f718a9a40c1890c8ce" },
+  "markview.nvim": { "branch": "main", "commit": "ec33f2aa333ca1d76f51847922578434d7aeadf7" },
+  "mason-lspconfig.nvim": { "branch": "main", "commit": "bb3a17efc797c34c054463174e5522442576ebd8" },
   "mason-null-ls.nvim": { "branch": "main", "commit": "de19726de7260c68d94691afb057fa73d3cc53e7" },
   "mason.nvim": { "branch": "main", "commit": "8024d64e1330b86044fed4c8494ef3dcd483a67c" },
-  "mini.icons": { "branch": "main", "commit": "94848dad1589a199f876539bd79befb0c5e3abf0" },
+  "mini.icons": { "branch": "main", "commit": "b8f6fa6f5a3fd0c56936252edcd691184e5aac0c" },
+  "multiterm.nvim": { "branch": "master", "commit": "99f00f5e069b15f50be4725f68f68a739fbf2acc" },
   "noice.nvim": { "branch": "main", "commit": "0427460c2d7f673ad60eb02b35f5e9926cf67c59" },
-  "none-ls.nvim": { "branch": "main", "commit": "db2a48b79cfcdab8baa5d3f37f21c78b6705c62e" },
+  "none-ls.nvim": { "branch": "main", "commit": "103b0926a31be1bc95743c6328cee309768f0a88" },
   "nui.nvim": { "branch": "main", "commit": "de740991c12411b663994b2860f1a4fd0937c130" },
   "nvim-autopairs": { "branch": "master", "commit": "23320e75953ac82e559c610bec5a90d9c6dfa743" },
   "nvim-cmp": { "branch": "main", "commit": "b5311ab3ed9c846b585c0c15b7559be131ec4be9" },
   "nvim-dap": { "branch": "master", "commit": "5dd4d50f2e6a2eaf9e57fad023d294ef371bda35" },
   "nvim-jdtls": { "branch": "master", "commit": "4d77ff02063cf88963d5cf10683ab1fd15d072de" },
-  "nvim-lspconfig": { "branch": "master", "commit": "1cb30b1bafe5a63a5c6ac20dc39f83487df38855" },
-  "nvim-notify": { "branch": "master", "commit": "a22f5d7ac511c2df2fd3290a9f04c48d5a822e2e" },
+  "nvim-lspconfig": { "branch": "master", "commit": "169745f176f58becad80363c3f8f2315ed6bb365" },
+  "nvim-notify": { "branch": "master", "commit": "397c7c1184745fca649e5104de659e6392ef5a4d" },
   "nvim-numbertoggle": { "branch": "main", "commit": "4b898b84d6f31f76bd563330d76177d5eb299efa" },
   "nvim-surround": { "branch": "main", "commit": "8dd9150ca7eae5683660ea20cec86edcd5ca4046" },
   "nvim-treesitter": { "branch": "master", "commit": "42fc28ba918343ebfd5565147a42a26580579482" },
-  "nvim-web-devicons": { "branch": "master", "commit": "19d6211c78169e78bab372b585b6fb17ad974e82" },
+  "nvim-web-devicons": { "branch": "master", "commit": "0422a19d9aa3aad2c7e5cca167e5407b13407a9d" },
   "plenary.nvim": { "branch": "master", "commit": "857c5ac632080dba10aae49dba902ce3abf91b35" },
   "rust-tools.nvim": { "branch": "master", "commit": "676187908a1ce35ffcd727c654ed68d851299d3e" },
   "sense.nvim": { "branch": "main", "commit": "74e61f251fffc64c4f29160569ccde087316b798" },
   "snacks.nvim": { "branch": "main", "commit": "bc0630e43be5699bb94dadc302c0d21615421d93" },
   "sonokai": { "branch": "master", "commit": "5baf26496047788dc000e9287e5ceb7420b2f42e" },
   "suda.vim": { "branch": "master", "commit": "9adda7d195222d4e2854efb2a88005a120296c47" },
-  "telescope-frecency.nvim": { "branch": "master", "commit": "03a0efd1a8668b902bddef4b82cb7d46cd5ab22c" },
+  "telescope-frecency.nvim": { "branch": "master", "commit": "21c08f073cfae477e6304b85cae78fbf46a793a4" },
   "telescope-fzf-native.nvim": { "branch": "main", "commit": "1f08ed60cafc8f6168b72b80be2b2ea149813e55" },
   "telescope-zoxide": { "branch": "main", "commit": "54bfe630bad08dc9891ec78c7cf8db38dd725c97" },
   "telescope.nvim": { "branch": "master", "commit": "b4da76be54691e854d3e0e02c36b0245f945c2c7" },
   "todo-comments.nvim": { "branch": "main", "commit": "304a8d204ee787d2544d8bc23cd38d2f929e7cc5" },
-  "toggleterm.nvim": { "branch": "main", "commit": "50ea089fc548917cc3cc16b46a8211833b9e3c7c" },
   "trouble.nvim": { "branch": "main", "commit": "85bedb7eb7fa331a2ccbecb9202d8abba64d37b3" },
+  "urlpreview.nvim": { "branch": "main", "commit": "c8a0eca1c359fbb1fd189adaea4f359ea451f57b" },
   "vim-visual-multi": { "branch": "master", "commit": "a6975e7c1ee157615bbc80fc25e4392f71c344d4" },
   "which-key.nvim": { "branch": "main", "commit": "370ec46f710e058c9c1646273e6b225acf47cbed" }
 }

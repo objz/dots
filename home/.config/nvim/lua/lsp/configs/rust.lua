@@ -119,24 +119,23 @@ return {
                     },
                 },
                 server = {
-                    on_attach = function(_, bufnr)
-                        local keymaps = vim.api.nvim_buf_get_keymap(bufnr, "n")
-                        for _, map in ipairs(keymaps) do
-                            if map.lhs == "K" then
-                                vim.api.nvim_buf_del_keymap(bufnr, "n", "K")
-                                break
-                            end
+                    on_attach = function(client, bufnr)
+                        handlers.on_attach(client, bufnr)
+                        if client.name == "rust_analyzer" then
+                          require("which-key").add({
+	                        { "<leader>l", group = "LSP Actions" },
+	                        { "<leader>le", "<cmd>RustExpand<cr>", desc = "Expand" },
+	                        { "<leader>lr", "<cmd>LspRestart<cr>", desc = "Restart Server" },
+	                        { "<leader>r", group = "Run Configurations" },
+                            { "<leader>rd", "<cmd>9Multiterm cargo build<cr>", desc = "cargo build" },
+                            { "<leader>rb", "<cmd>9Multiterm cargo run<cr>", desc = "cargo run" },
+                            { "<leader>rs", "<cmd>9Multiterm cargo test<cr>", desc = "cargo test" },
+                            { "<leader>rm", "<cmd>9Multiterm cargo update<cr>", desc = "cargo update" },
+                          },
+                          {
+                            buffer = bufnr,
+                          })
                         end
-
-
-                        handlers.on_attach(_, bufnr)
-                        local wk = require("which-key")
-                        wk.add({
-                            -- { "<leader>dE", "<cmd>RustDebuggables<cr>", desc = "[RUST] Show debug configurations" },
-                            -- { "<leader>de", "<cmd>RustLastDebug<cr>", desc = "[RUST] Debug last" },
-                            { "<leader>cs", "<cmd>RustRun<cr>", desc = "[RUST] Show run configurations" },
-                            { "<leader>cR", "<cmd>RustLastRun<cr>", desc = "[RUST] Run last" },
-                        })
                     end,
                     capabilities = handlers.capabilities,
                     standalone = false,

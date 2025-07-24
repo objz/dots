@@ -81,7 +81,8 @@ wk.add({
 		end,
 		desc = "Toggle file tree view",
 	},
-	{ "<S-F7>", "<Plug>(MultitermList)<Plug>", desc = "List terminals" },
+	{ "<S-F6>", "<Plug>(MultitermList)<Plug>", desc = "List terminals" },
+	{ "<C-F6>", "<Plug>(MultitermKillCurrent)<Plug>", desc = "Kill terminal" },
 	{ "<leader>vo", "<cmd>Lspsaga outline<cr>", desc = "Toggle LSP outline" },
 	{ "<leader>vm", "<cmd>Markview splitToggle<cr>", desc = "Toggle Markdown preview" },
 	{ "<leader>vd", "<cmd>Trouble todo toggle<cr>", desc = "Toggle todo comment view" },
@@ -94,17 +95,19 @@ wk.add({
 	{ "<leader>c", group = "Code & LSP" },
 	{
 		"<leader>ca",
-		vim.lsp.buf.code_action,
+		require("actions-preview").code_actions,
 		desc = "Code Action",
 	},
 	{
 		"<leader>cd",
-		vim.lsp.buf.definition,
+		-- vim.lsp.buf.definition,
+        require("goto-preview").goto_preview_definition,
 		desc = "Go to Definition",
 	},
 	{
 		"<leader>cf",
-		vim.lsp.buf.references,
+		-- vim.lsp.buf.references,
+        require("goto-preview").goto_preview_references,
 		desc = "Find References",
 	},
 	{

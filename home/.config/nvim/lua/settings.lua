@@ -6,7 +6,7 @@ local options = {
     wrap = true,
     backup = false,
     swapfile = true,
-    hlsearch = true, 
+    hlsearch = true,
     incsearch = true,
     showmode = false,
     expandtab = true,
@@ -25,19 +25,19 @@ local options = {
     smartcase = true,
     splitbelow = true,
     splitright = true,
-    number = true, 
+    number = true,
     relativenumber = true,
-    clipboard = "unnamed,unnamedplus", 
+    clipboard = "unnamed,unnamedplus",
     cursorline = true,
     mouse = "a",
     cmdheight = 1,
     undodir = "/tmp/.nvimdid",
-    undofile = true, 
+    undofile = true,
     pumheight = 10,
     laststatus = 3,
-    updatetime = 100, 
+    updatetime = 100,
     background = "dark",
-    completeopt = "menuone", 
+    completeopt = "menuone",
     breakindent = true,
     foldmethod = "expr",
     foldexpr = "nvim_treesitter#foldexpr()",
@@ -58,6 +58,8 @@ vim.cmd [[set fcs=eob:\ ]]
 vim.cmd [[filetype plugin indent on]]
 
 utils.set_indent_sizes { go = 4, python = 4, rust = 4, cpp = 4, c = 4, make = 4, lua = 4, java = 4, json = 4 }
+
+vim.opt.guifont = "JetBrainsMono Nerd Font Mono:h9"
 
 
 vim.g.mapleader = ' '
