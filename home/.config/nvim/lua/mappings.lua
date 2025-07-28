@@ -8,6 +8,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.g.copilot_no_tab_map = true
 vim.api.nvim_set_keymap("i", "<Right>", 'copilot#Accept("<CR>")', { expr = true, silent = true })
+vim.keymap.set("n", "gp", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>", {noremap=true})
 
 -- Window movement
 wk.add({
@@ -62,7 +63,7 @@ wk.add({
 wk.add({
 	{ "<leader>f", group = "Find & Search" },
 	{ "<leader>ff", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "Search in current buffer" },
-	{ "<leader>fa", "<cmd>Telescope grep_string<cr>", desc = "Search for word under cursor" },
+	{ "<leader>fa", "<cmd>Telescope grep_string<cr>", desc = "Search for word in system" },
 	{ "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live grep in workspace" },
 	{ "<leader>fr", "<cmd>Telescope oldfiles<cr>", desc = "Recent files" },
 	{ "<leader>fc", "<cmd>Telescope command_history<cr>", desc = "Command history" },
@@ -83,9 +84,9 @@ wk.add({
 	},
 	{ "<S-F6>", "<Plug>(MultitermList)<Plug>", desc = "List terminals" },
 	{ "<C-F6>", "<Plug>(MultitermKillCurrent)<Plug>", desc = "Kill terminal" },
-	{ "<leader>vo", "<cmd>Lspsaga outline<cr>", desc = "Toggle LSP outline" },
+	-- { "<leader>vo", "<cmd>Lspsaga outline<cr>", desc = "Toggle LSP outline" },
 	{ "<leader>vm", "<cmd>Markview splitToggle<cr>", desc = "Toggle Markdown preview" },
-	{ "<leader>vd", "<cmd>Trouble todo toggle<cr>", desc = "Toggle todo comment view" },
+	-- { "<leader>vd", "<cmd>Trouble todo toggle<cr>", desc = "Toggle todo comment view" },
 	{ "<leader>vs", "<cmd>Split<cr>", desc = "Split Window" },
 	{ "<leader>vq", "<cmd>q<cr>", desc = "Quit current Window" },
 })

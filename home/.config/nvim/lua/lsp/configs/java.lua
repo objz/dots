@@ -57,7 +57,7 @@ return {
         allow_incremental_sync = true,
       },
       root_dir = require("jdtls.setup").find_root({
-        ".git", "mvnw", "gradlew", "pom.xml", "build.gradle", "build.gradle.kts"
+        "settings.gradle", "settings.gradle.kts", ".git"
       }),
       init_options  = { bundles = bundles },
       capabilities   = handlers.capabilities,
