@@ -1,0 +1,15 @@
+return {
+    "j-hui/fidget.nvim",
+    "boltlessengineer/sense.nvim",
+    "windwp/nvim-autopairs",
+    "mg979/vim-visual-multi",
+    "sitiom/nvim-numbertoggle",
+    "github/copilot.vim",
+    "ray-x/lsp_signature.nvim",
+    "lambdalisue/suda.vim",
+    "folke/todo-comments.nvim",
+    "aznhe21/actions-preview.nvim",
+    "numToStr/Comment.nvim",
+    "kevinhwang91/nvim-bqf",
+    "neovim/nvim-lspconfig",
+}

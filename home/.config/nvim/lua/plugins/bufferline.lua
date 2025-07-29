@@ -1,7 +1,6 @@
 return {
-    -- Buffer tabview
 	"akinsho/bufferline.nvim",
-	dependencies = { "kyazdani42/nvim-web-devicons", "famiu/bufdelete.nvim" },
+	dependencies = { "echasnovski/mini.icons", "famiu/bufdelete.nvim" },
 	config = function()
 		require("bufferline").setup({
 			options = {
@@ -12,7 +11,7 @@ return {
 				left_mouse_command = "buffer %d",
 				middle_mouse_command = nil,
 				indicator = { icon = "| ", style = "none" },
-				buffer_close_icon = "",
+				buffer_close_icon = "",
 				modified_icon = "●",
 				close_icon = "",
 				left_trunc_marker = "",
@@ -99,6 +98,5 @@ return {
 				},
 			},
 		})
-	end
+	end,
 }
-

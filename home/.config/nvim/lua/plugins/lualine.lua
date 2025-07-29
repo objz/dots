@@ -4,7 +4,7 @@ return {
         require("lualine").setup({
             options = {
                 icons_enabled = true,
-                theme = require("theme").theme_name,
+                theme = "sonokai",
                 disabled_filetypes = {},
                 always_divide_middle = true,
                 globalstatus = true,

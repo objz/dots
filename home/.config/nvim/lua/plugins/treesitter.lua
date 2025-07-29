@@ -1,6 +1,7 @@
 return {
     "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
+    branch = "master",
+    build = "TSUpdate",
     config = function()
         require("nvim-treesitter.configs").setup({
             ensure_installed = {
@@ -8,7 +9,7 @@ return {
                 "markdown", "markdown_inline",
                 "bash", "regex", "rust", "python",
                 "javascript", "typescript", "java",
-                "html", "css", "json"
+                "html", "css", "json", "rust",
             },
             ignore_install = {},
             modules = {},

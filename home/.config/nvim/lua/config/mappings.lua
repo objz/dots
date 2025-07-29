@@ -4,11 +4,8 @@ if not ok then
 	return
 end
 
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
 vim.g.copilot_no_tab_map = true
 vim.api.nvim_set_keymap("i", "<Right>", 'copilot#Accept("<CR>")', { expr = true, silent = true })
-vim.keymap.set("n", "gp", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>", {noremap=true})
 
 -- Window movement
 wk.add({
@@ -84,14 +81,12 @@ wk.add({
 	},
 	{ "<S-F6>", "<Plug>(MultitermList)<Plug>", desc = "List terminals" },
 	{ "<C-F6>", "<Plug>(MultitermKillCurrent)<Plug>", desc = "Kill terminal" },
-	-- { "<leader>vo", "<cmd>Lspsaga outline<cr>", desc = "Toggle LSP outline" },
 	{ "<leader>vm", "<cmd>Markview splitToggle<cr>", desc = "Toggle Markdown preview" },
-	-- { "<leader>vd", "<cmd>Trouble todo toggle<cr>", desc = "Toggle todo comment view" },
 	{ "<leader>vs", "<cmd>Split<cr>", desc = "Split Window" },
 	{ "<leader>vq", "<cmd>q<cr>", desc = "Quit current Window" },
 })
 
--- Code & LSP (unified group)
+-- code
 wk.add({
 	{ "<leader>c", group = "Code & LSP" },
 	{
@@ -101,14 +96,12 @@ wk.add({
 	},
 	{
 		"<leader>cd",
-		-- vim.lsp.buf.definition,
-        require("goto-preview").goto_preview_definition,
+		require("goto-preview").goto_preview_definition,
 		desc = "Go to Definition",
 	},
 	{
 		"<leader>cf",
-		-- vim.lsp.buf.references,
-        require("goto-preview").goto_preview_references,
+		require("goto-preview").goto_preview_references,
 		desc = "Find References",
 	},
 	{
@@ -138,9 +131,8 @@ wk.add({
 	{ "<leader>d", group = "Diagnostics" },
 	{ "<leader>dn", vim.diagnostic.goto_next, desc = "Next Diagnostic" },
 	{ "<leader>dp", vim.diagnostic.goto_prev, desc = "Previous Diagnostic" },
-	{ "<leader>dl", vim.diagnostic.open_float, desc = "Show Line Diagnostics" },
 	{ "<leader>dq", vim.diagnostic.setqflist, desc = "Diagnostics to Quickfix" },
-	{ "<leader>dw", vim.diagnostic.setloclist, desc = "Diagnostics to Location List" },
+	{ "<leader>dl", vim.diagnostic.setloclist, desc = "Diagnostics to Location List" },
 })
 
 -- Git operations (unified group)
@@ -153,19 +145,6 @@ wk.add({
 	{ "<leader>gf", "<cmd>Telescope git_files<cr>", desc = "Git Files" },
 })
 
--- Text Operations
-wk.add({
-	{ "ys", desc = "Add surround (motion + char)" },
-	{ "yss", desc = "Surround entire line" },
-	{ "ds", desc = "Delete surround (char)" },
-	{ "cs", desc = "Change surround (old + new)" },
-}, { mode = "n" })
-
-wk.add({
-	mode = { "v" },
-	{ "S", desc = "Surround selection" },
-})
-
 -- Insert mode mappings
 wk.add({
 	mode = { "i" },
@@ -175,7 +154,6 @@ wk.add({
 	{ "<a-d>", '<C-o>"_diw', desc = "Delete word" },
 	{ "<a-j>", "<ESC>:m .+1<cr>==gi", desc = "Move block down" },
 	{ "<a-k>", "<ESC>:m .-2<cr>==gi", desc = "Move block up" },
-	{ "<C-h>", vim.lsp.buf.signature_help, desc = "Signature Help" },
 })
 
 -- Visual mode mappings
@@ -187,27 +165,6 @@ wk.add({
 	{ "x", '"+d', desc = "Cut to system clipboard" },
 	{ "y", '"+y', desc = "Copy to system clipboard" },
 	{ "p", '"+p', desc = "Paste from system clipboard" },
-	{ ".", "<Plug>(comment_toggle_blockwise_current)", desc = "Toggle block comment" },
+	{ ".", "gc", desc = "Toggle block comment" },
 	{ "<leader>ca", vim.lsp.buf.code_action, desc = "Code Action (Range)" },
-})
-
--- Session management
-wk.add({
-	{ "<leader>s", group = "Session" },
-	{ "<leader>ss", "<cmd>SessionSave<cr>", desc = "Save Session" },
-	{ "<leader>sr", "<cmd>SessionRestore<cr>", desc = "Restore Session" },
-	{ "<leader>sd", "<cmd>SessionDelete<cr>", desc = "Delete Session" },
-	{ "<leader>sf", "<cmd>Telescope session-lens search_session<cr>", desc = "Find Sessions" },
-})
-
--- Plugin management
-wk.add({
-	{ "<leader>p", group = "Plugins" },
-	{ "<leader>pi", "<cmd>Lazy install<cr>", desc = "Install Plugins" },
-	{ "<leader>ps", "<cmd>Lazy sync<cr>", desc = "Sync Plugins" },
-	{ "<leader>pu", "<cmd>Lazy update<cr>", desc = "Update Plugins" },
-	{ "<leader>pc", "<cmd>Lazy clean<cr>", desc = "Clean Plugins" },
-	{ "<leader>pl", "<cmd>Lazy log<cr>", desc = "Plugin Log" },
-	{ "<leader>ph", "<cmd>Lazy home<cr>", desc = "Lazy Home" },
-	{ "<leader>pm", "<cmd>Mason<cr>", desc = "Mason" },
 })

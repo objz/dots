@@ -19,7 +19,7 @@ return {
 			},
 			rustfmt = {
 				command = "rustfmt",
-				args = { "--emit=stdout", "--edition=2021", "--config", "tab_spaces=4" },
+				args = { "--emit=stdout", "--edition=2024", "--config", "tab_spaces=4" },
 				stdin = true,
 			},
 		},
