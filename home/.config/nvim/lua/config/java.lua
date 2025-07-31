@@ -8,8 +8,7 @@ local dbg_pkg      = mason_root .. "/packages/java-debug-adapter/extension/serve
 local test_pkg     = mason_root .. "/packages/java-test/extension/server"
 
 local function make_config()
-	local root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew", "pom.xml", "build.gradle",
-		".classpath" })
+	local root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew", })
 	if not root_dir then
 		vim.notify("jdtls: could not find project root; skipping start", vim.log.levels.WARN)
 		return nil

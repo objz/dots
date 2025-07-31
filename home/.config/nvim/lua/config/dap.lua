@@ -9,7 +9,7 @@ require("mason-nvim-dap").setup({
 })
 
 pcall(function()
-  require("config.rust") -- assumes rust.lua is at lua/rust.lua or otherwise in runtimepath as "rust"
+	require("config.rust") -- assumes rust.lua is at lua/rust.lua or otherwise in runtimepath as "rust"
 end)
 
 do
@@ -39,13 +39,23 @@ do
 	vim.uri_from_bufnr = safe_uri_from_bufnr
 end
 
+
+local function java_project()
+	local root = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew", })
+	if root and root ~= "" then
+		return vim.fn.fnamemodify(root, ":t")
+	end
+	return vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
+end
+
 dap.configurations.java = {
 	{
-		type     = "java",
-		request  = "attach",
-		name     = "Connect remote: 127.0.0.1:5005",
-		hostName = "127.0.0.1",
-		port     = 5005,
+		type        = "java",
+		request     = "attach",
+		name        = "Connect remote: 127.0.0.1:5005",
+		hostName    = "127.0.0.1",
+		port        = 5005,
+		projectName = java_project(),
 	},
 }
 -- dap.configurations.rust = {
