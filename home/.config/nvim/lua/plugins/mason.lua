@@ -28,7 +28,10 @@ return {
 					"ts_ls",
 				},
 				automatic_installation = true,
-                automatic_enable = true,
+				automatic_enable = {
+					exclude = { "jdtls" },
+				},
+
 			})
 		end,
 	}

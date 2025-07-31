@@ -79,8 +79,8 @@ wk.add({
 		end,
 		desc = "Toggle file tree view",
 	},
-	{ "<S-F6>", "<Plug>(MultitermList)<Plug>", desc = "List terminals" },
-	{ "<C-F6>", "<Plug>(MultitermKillCurrent)<Plug>", desc = "Kill terminal" },
+	-- { "<S-F6>", "<Plug>(MultitermList)<Plug>", desc = "List terminals" },
+	-- { "<C-F6>", "<Plug>(MultitermKillCurrent)<Plug>", desc = "Kill terminal" },
 	{ "<leader>vm", "<cmd>Markview splitToggle<cr>", desc = "Toggle Markdown preview" },
 	{ "<leader>vs", "<cmd>Split<cr>", desc = "Split Window" },
 	{ "<leader>vq", "<cmd>q<cr>", desc = "Quit current Window" },
@@ -128,11 +128,11 @@ wk.add({
 
 -- Diagnostics
 wk.add({
-	{ "<leader>d", group = "Diagnostics" },
-	{ "<leader>dn", vim.diagnostic.goto_next, desc = "Next Diagnostic" },
-	{ "<leader>dp", vim.diagnostic.goto_prev, desc = "Previous Diagnostic" },
-	{ "<leader>dq", vim.diagnostic.setqflist, desc = "Diagnostics to Quickfix" },
-	{ "<leader>dl", vim.diagnostic.setloclist, desc = "Diagnostics to Location List" },
+	{ "<leader>x", group = "Diagnostics" },
+	{ "<leader>xn", vim.diagnostic.goto_next, desc = "Next Diagnostic" },
+	{ "<leader>xp", vim.diagnostic.goto_prev, desc = "Previous Diagnostic" },
+	{ "<leader>xq", vim.diagnostic.setqflist, desc = "Diagnostics to Quickfix" },
+	{ "<leader>xl", vim.diagnostic.setloclist, desc = "Diagnostics to Location List" },
 })
 
 -- Git operations (unified group)

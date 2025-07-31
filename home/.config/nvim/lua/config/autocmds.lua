@@ -20,6 +20,26 @@ vim.filetype.add({
 	},
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "java",
+	callback = function(args)
+		local bufnr = args.buf
+
+		for _, client in pairs(vim.lsp.get_clients({ bufnr = bufnr })) do
+			if client.name == "jdtls" then
+				return
+			end
+		end
+
+		local java_conf = require("config.java").get_config()
+		if not java_conf then
+			return
+		end
+
+		require("jdtls").start_or_attach(java_conf)
+	end,
+})
+
 vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(args)
 		local client = vim.lsp.get_client_by_id(args.data.client_id)
@@ -29,11 +49,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 		local bufnr = args.buf
 		require("which-key").add({
-			{ "<leader>l",  group = "LSP Actions" },
-			{ "<leader>lo", "<cmd>lua require'jdtls'.organize_imports()<cr>",     desc = "Organize Imports" },
-			{ "<leader>ls", "<cmd>lua require'jdtls'.super_implementation()<cr>", desc = "Super Implementation" },
-			{ "<leader>lr", "<cmd>LspRestart<cr>",                                desc = "Restart Server" },
-			{ "<leader>lu", "<cmd>JdtUpdateConfig<cr>",                           desc = "Update Config" },
+			{ "<leader>co", "<cmd>lua require'jdtls'.organize_imports()<cr>",     desc = "[JDTLS] Organize Imports" },
+			{ "<leader>cs", "<cmd>lua require'jdtls'.super_implementation()<cr>", desc = "[JDTLS] Super Implementation" },
 			{ "<leader>r",  group = "Run Configurations" },
 			{ "<leader>rd", "<cmd>9Multiterm ./gradlew dev<cr>",                  desc = "gradlew dev" },
 			{ "<leader>rb", "<cmd>9Multiterm ./gradlew build<cr>",                desc = "gradlew build" },
@@ -53,9 +70,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 		local bufnr = args.buf
 		require("which-key").add({
-			{ "<leader>l",  group = "LSP Actions" },
-			{ "<leader>le", "<cmd>RustExpand<cr>",              desc = "Expand" },
-			{ "<leader>lr", "<cmd>LspRestart<cr>",              desc = "Restart Server" },
 			{ "<leader>r",  group = "Run Configurations" },
 			{ "<leader>rd", "<cmd>9Multiterm cargo build<cr>",  desc = "cargo build" },
 			{ "<leader>rb", "<cmd>9Multiterm cargo run<cr>",    desc = "cargo run" },
