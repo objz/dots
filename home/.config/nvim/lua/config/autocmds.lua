@@ -113,3 +113,15 @@ vim.api.nvim_create_user_command("WQ", "wq", {})
 vim.api.nvim_create_user_command("Wqa", "wqa", {})
 vim.api.nvim_create_user_command("WQa", "wqa", {})
 vim.api.nvim_create_user_command("WQA", "wqa", {})
+
+-- fix blink coloshemes
+
+local function fix_blink_highlights()
+	vim.api.nvim_set_hl(0, "BlinkCmpMenuSelection", { bg = "#2F3540", fg = "#f0f8ff", bold = true })
+end
+
+fix_blink_highlights()
+vim.api.nvim_create_autocmd("ColorScheme", {
+	pattern = "*",
+	callback = fix_blink_highlights,
+})
