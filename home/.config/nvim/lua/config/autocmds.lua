@@ -120,8 +120,27 @@ local function fix_blink_highlights()
 	vim.api.nvim_set_hl(0, "BlinkCmpMenuSelection", { bg = "#2F3540", fg = "#f0f8ff", bold = true })
 end
 
+local function fix_dap_highlights()
+	vim.api.nvim_set_hl(0, "DapBreakpoint", { fg = "#e06c75", bg = "NONE", bold = true })
+	vim.api.nvim_set_hl(0, "DapBreakpointCondition", { fg = "#e5c07b", bg = "NONE", italic = true })
+	vim.api.nvim_set_hl(0, "DapBreakpointRejected", { fg = "#be5046", bg = "NONE" })
+	vim.api.nvim_set_hl(0, "DapLogPoint", { fg = "#56b6c2", bg = "NONE" })
+	vim.api.nvim_set_hl(0, "DapStopped", { fg = "#ffffff", bg = "#3e4452", bold = true })
+	vim.api.nvim_set_hl(0, "DapStoppedLine", { bg = "#2f374f" })
+	vim.api.nvim_set_hl(0, "CursorLine", { bg = "#2c313c" })
+end
+
 fix_blink_highlights()
+fix_dap_highlights()
 vim.api.nvim_create_autocmd("ColorScheme", {
 	pattern = "*",
-	callback = fix_blink_highlights,
+	callback = function()
+		fix_blink_highlights()
+		fix_dap_highlights()
+	end,
 })
+
+vim.fn.sign_define("DapBreakpoint", { text = "●", texthl = "DapBreakpoint", linehl = "", numhl = "" })
+vim.fn.sign_define("DapStopped", { text = "➜", texthl = "DapStopped", linehl = "DapStoppedLine", numhl = "DapStoppedLine" })
+vim.fn.sign_define("DapBreakpointCondition", { text = "◆", texthl = "DapBreakpointCondition" })
+vim.fn.sign_define("DapLogPoint", { text = "🛈", texthl = "DapLogPoint" })
