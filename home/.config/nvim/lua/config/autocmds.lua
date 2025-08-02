@@ -114,6 +114,7 @@ vim.api.nvim_create_user_command("Wqa", "wqa", {})
 vim.api.nvim_create_user_command("WQa", "wqa", {})
 vim.api.nvim_create_user_command("WQA", "wqa", {})
 
+
 -- fix blink coloshemes
 
 local function fix_blink_highlights()

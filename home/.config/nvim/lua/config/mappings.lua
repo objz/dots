@@ -59,12 +59,12 @@ wk.add({
 -- Find & Search
 wk.add({
 	{ "<leader>f", group = "Find & Search" },
-	{ "<leader>ff", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "Search in current buffer" },
+	-- { "<leader>ff", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "Search in current buffer" },
 	{ "<leader>fa", "<cmd>Telescope grep_string<cr>", desc = "Search for word in system" },
-	{ "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live grep in workspace" },
-	{ "<leader>fr", "<cmd>Telescope oldfiles<cr>", desc = "Recent files" },
+	-- { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live grep in workspace" },
+	-- { "<leader>fr", "<cmd>Telescope oldfiles<cr>", desc = "Recent files" },
 	{ "<leader>fc", "<cmd>Telescope command_history<cr>", desc = "Command history" },
-	{ "<leader>fz", "<cmd>Telescope zoxide list<cr>", desc = "Recent directories" },
+	-- { "<leader>fz", "<cmd>Telescope zoxide list<cr>", desc = "Recent directories" },
 	{ "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "Open buffers" },
 	{ "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "Help tags" },
 })
