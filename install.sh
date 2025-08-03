@@ -59,10 +59,9 @@ print_message() {
     printf "\n\033[1;32m%s\033[0m\n" "$1"
 }
 
-
 choose_clone_location() {
     if [ -n "$CLONE_DIR" ]; then
-        :  # provided via CLI
+        :  
     else
         CLONE_DIR="$DEFAULT_CLONE_DIR"
     fi
@@ -70,7 +69,6 @@ choose_clone_location() {
     CLONE_DIR="${CLONE_DIR%/}"
     PKG_LIST="$CLONE_DIR/pkglist.txt"
 }
-
 
 clone_repository() {
     print_message "Cloning repository into '$CLONE_DIR'..."
@@ -184,7 +182,14 @@ install_zsh_plugins() {
     echo "Zsh plugins and theme installed successfully."
 }
 
-
+backup_if_conflict() {
+    if [ -e "$1" ] || [ -L "$1" ]; then
+        timestamp=$(date +%Y%m%d%H%M%S)
+        backup="${1}_${timestamp}_bak"
+        echo "Backing up existing '$1' to '$backup'"
+        mv "$1" "$backup"
+    fi
+}
 
 stow_dotfiles() {
     print_message "Applying dotfiles with GNU stow..."
@@ -201,6 +206,22 @@ stow_dotfiles() {
         exit 1
     fi
 
+    for file in "$stow_root"/.[^.]*; do
+        [ ! -e "$file" ] && continue
+        base=$(basename "$file")
+        target="$HOME/$base"
+        backup_if_conflict "$target"
+    done
+
+    if [ -d "$stow_root/.config" ]; then
+        for entry in "$stow_root/.config"/{*,.[^.]*}; do
+            [ ! -e "$entry" ] && continue
+            base=$(basename "$entry")
+            target="$HOME/.config/$base"
+            backup_if_conflict "$target"
+        done
+    fi
+
     cd "$stow_root"
 
     if [ "$FORCE_INSTALL" = true ]; then
@@ -210,9 +231,16 @@ stow_dotfiles() {
     stow -v --target="$HOME" . --ignore='.git'
 
     echo "Dotfiles applied via stow."
+
+    scripts_dir="$HOME/.config/hypr/scripts"
+    for script in killwindow.sh screenshot.sh volumecontrol.sh; do
+        path="$scripts_dir/$script"
+        if [ -f "$path" ]; then
+            chmod +x "$path"
+            echo "Made executable: $path"
+        fi
+    done
 }
-
-
 
 set_default_shell() {
     print_message "Setting zsh as default shell..."
