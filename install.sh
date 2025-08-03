@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
+# Defaults
 DEFAULT_CLONE_DIR="$HOME/dots"
 REPO_URL="https://github.com/objz/dots.git"
 CLONE_DIR=""
@@ -15,8 +16,9 @@ show_help() {
 Usage: $0 [OPTIONS]
 
 OPTIONS:
-    -f, --force     Force reinstall / reapply even if already present
-    -h, --help      Show this help message
+    -f, --force             Force reinstall / reapply even if already present
+    -d, --target-dir PATH   Clone dots repo into PATH instead of default
+    -h, --help              Show this help message
 
 EOF
 }
@@ -26,6 +28,18 @@ parse_args() {
         case $1 in
             -f|--force)
                 FORCE_INSTALL=true
+                shift
+                ;;
+            -d|--target-dir)
+                if [ $# -lt 2 ]; then
+                    echo "Error: --target-dir requires an argument."
+                    exit 1
+                fi
+                CLONE_DIR="$2"
+                shift 2
+                ;;
+            --target-dir=*)
+                CLONE_DIR="${1#*=}"
                 shift
                 ;;
             -h|--help)
@@ -46,17 +60,26 @@ print_message() {
 }
 
 choose_clone_location() {
-    print_message "Dotfiles repository clone location"
-    printf "Default is '%s'. Press Enter to accept, or provide a full custom path: " "$DEFAULT_CLONE_DIR"
-    read -r input_path
-    if [ -z "$input_path" ]; then
-        CLONE_DIR="$DEFAULT_CLONE_DIR"
+    if [ -n "$CLONE_DIR" ]; then
+        # already provided via CLI
+        :
+    elif [ -t 0 ]; then
+        print_message "Dotfiles repository clone location"
+        printf "Default is '%s'. Press Enter to accept, or provide a full custom path: " "$DEFAULT_CLONE_DIR"
+        read -r input_path
+        if [ -z "$input_path" ]; then
+            CLONE_DIR="$DEFAULT_CLONE_DIR"
+        else
+            CLONE_DIR="$input_path"
+        fi
     else
-        CLONE_DIR="$input_path"
+        # Non-interactive fallback
+        CLONE_DIR="$DEFAULT_CLONE_DIR"
     fi
-    PKG_LIST="$CLONE_DIR/pkglist.txt"
 
+    # Normalize path (remove trailing slash)
     CLONE_DIR="${CLONE_DIR%/}"
+    PKG_LIST="$CLONE_DIR/pkglist.txt"
 }
 
 clone_repository() {
