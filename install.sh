@@ -10,15 +10,17 @@ PKG_LIST=""
 PARU_REPO="https://aur.archlinux.org/paru.git"
 ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 FORCE_INSTALL=false
+UPDATE_ONLY=false
 
 show_help() {
     cat << EOF
 Usage: $0 [OPTIONS]
 
 OPTIONS:
-    -f, --force             Force reinstall / reapply even if already present
-    -d, --target-dir PATH   Clone dots repo into PATH instead of default
-    -h, --help              Show this help message
+    -f, --force                 Force reinstall / reapply even if already present
+    -d, --target-dir PATH       Clone dots repo into PATH instead of default
+    -u, --update-dotfiles       Only update dotfiles: force reclone dots and apply stow, then exit
+    -h, --help                  Show this help message
 
 EOF
 }
@@ -28,6 +30,11 @@ parse_args() {
         case $1 in
             -f|--force)
                 FORCE_INSTALL=true
+                shift
+                ;;
+            -u|--update-dotfiles)
+                UPDATE_ONLY=true
+                FORCE_INSTALL=true  # update implies force for the repo
                 shift
                 ;;
             -d|--target-dir)
@@ -61,7 +68,7 @@ print_message() {
 
 choose_clone_location() {
     if [ -n "$CLONE_DIR" ]; then
-        :  
+        :  # provided via CLI
     else
         CLONE_DIR="$DEFAULT_CLONE_DIR"
     fi
@@ -182,15 +189,6 @@ install_zsh_plugins() {
     echo "Zsh plugins and theme installed successfully."
 }
 
-backup_if_conflict() {
-    if [ -e "$1" ] || [ -L "$1" ]; then
-        timestamp=$(date +%Y%m%d%H%M%S)
-        backup="${1}_${timestamp}_bak"
-        echo "Backing up existing '$1' to '$backup'"
-        mv "$1" "$backup"
-    fi
-}
-
 stow_dotfiles() {
     print_message "Applying dotfiles with GNU stow..."
 
@@ -206,22 +204,6 @@ stow_dotfiles() {
         exit 1
     fi
 
-    for file in "$stow_root"/.[^.]*; do
-        [ ! -e "$file" ] && continue
-        base=$(basename "$file")
-        target="$HOME/$base"
-        backup_if_conflict "$target"
-    done
-
-    if [ -d "$stow_root/.config" ]; then
-        for entry in "$stow_root/.config"/{*,.[^.]*}; do
-            [ ! -e "$entry" ] && continue
-            base=$(basename "$entry")
-            target="$HOME/.config/$base"
-            backup_if_conflict "$target"
-        done
-    fi
-
     cd "$stow_root"
 
     if [ "$FORCE_INSTALL" = true ]; then
@@ -231,15 +213,6 @@ stow_dotfiles() {
     stow -v --target="$HOME" . --ignore='.git'
 
     echo "Dotfiles applied via stow."
-
-    scripts_dir="$HOME/.config/hypr/scripts"
-    for script in killwindow.sh screenshot.sh volumecontrol.sh; do
-        path="$scripts_dir/$script"
-        if [ -f "$path" ]; then
-            chmod +x "$path"
-            echo "Made executable: $path"
-        fi
-    done
 }
 
 set_default_shell() {
@@ -289,6 +262,13 @@ main() {
     choose_clone_location
 
     clone_repository
+
+    if [ "$UPDATE_ONLY" = true ]; then
+        stow_dotfiles
+        echo "Update-only mode: completed dotfiles update and exiting."
+        exit 0
+    fi
+
     install_paru
     install_packages
     install_homebrew
