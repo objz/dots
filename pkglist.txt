@@ -70,7 +70,7 @@ wl-clipboard
 wlogout
 xdg-desktop-portal-hyprland
 xwaylandvideobridge
-superfile-bin
+superfile
 zoxide
 zram-generator
 zsh
