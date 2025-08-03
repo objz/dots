@@ -271,17 +271,6 @@ set_default_shell() {
 reboot_system() {
     print_message "Installation completed successfully!"
     echo "Reboot recommended for all changes to take effect."
-    printf "Press 'y' to reboot now, or any other key to skip: "
-    read -r response
-    case "$response" in
-        [yY]|[yY][eE][sS])
-            echo "Rebooting..."
-            sudo reboot
-            ;;
-        *)
-            echo "Reboot skipped. Please reboot manually."
-            ;;
-    esac
 }
 
 main() {
