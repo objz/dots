@@ -59,21 +59,11 @@ print_message() {
     printf "\n\033[1;32m%s\033[0m\n" "$1"
 }
 
+
 choose_clone_location() {
     if [ -n "$CLONE_DIR" ]; then
-        # already provided via CLI
-        :
-    elif [ -t 0 ]; then
-        print_message "Dotfiles repository clone location"
-        printf "Default is '%s'. Press Enter to accept, or provide a full custom path: " "$DEFAULT_CLONE_DIR"
-        read -r input_path
-        if [ -z "$input_path" ]; then
-            CLONE_DIR="$DEFAULT_CLONE_DIR"
-        else
-            CLONE_DIR="$input_path"
-        fi
+        :  # provided via CLI
     else
-        # Non-interactive fallback
         CLONE_DIR="$DEFAULT_CLONE_DIR"
     fi
 
@@ -81,6 +71,7 @@ choose_clone_location() {
     CLONE_DIR="${CLONE_DIR%/}"
     PKG_LIST="$CLONE_DIR/pkglist.txt"
 }
+
 
 clone_repository() {
     print_message "Cloning repository into '$CLONE_DIR'..."
