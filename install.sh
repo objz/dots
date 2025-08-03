@@ -67,7 +67,6 @@ choose_clone_location() {
         CLONE_DIR="$DEFAULT_CLONE_DIR"
     fi
 
-    # Normalize path (remove trailing slash)
     CLONE_DIR="${CLONE_DIR%/}"
     PKG_LIST="$CLONE_DIR/pkglist.txt"
 }
@@ -185,11 +184,12 @@ install_zsh_plugins() {
     echo "Zsh plugins and theme installed successfully."
 }
 
+
 stow_dotfiles() {
     print_message "Applying dotfiles with GNU stow..."
 
-    if [ ! -d "$CLONE_DIR/home" ]; then
-        echo "Warning: No home directory found in repository."
+    if [ ! -d "$CLONE_DIR" ]; then
+        echo "Warning: Clone directory not present."
         return 0
     fi
 
@@ -198,35 +198,47 @@ stow_dotfiles() {
         exit 1
     fi
 
-    cd "$CLONE_DIR/home"
+    cd "$CLONE_DIR"
+    for file in .[^.]*; do
+        [ "$file" = "." ] && continue
+        [ "$file" = ".." ] && continue
+        [ ! -f "$file" ] && continue  
 
-    for pkg in * .[^.]*; do
-        [ "$pkg" = "." ] && continue
-        [ "$pkg" = ".." ] && continue
-        [ ! -e "$pkg" ] && continue
+        pkg="$file"  
 
-        if [ -f "$pkg" ]; then
-            TEMP_STOW_DIR="/tmp/stow-single-$pkg"
-            rm -rf "$TEMP_STOW_DIR"
-            mkdir -p "$TEMP_STOW_DIR/$pkg"
-            cp "$pkg" "$TEMP_STOW_DIR/$pkg/"
-            pushd "$TEMP_STOW_DIR" >/dev/null
-            if [ "$FORCE_INSTALL" = true ]; then
-                stow -vD --target="$HOME" "$pkg" 2>/dev/null || true
-            fi
-            stow -v --target="$HOME" "$pkg"
-            popd >/dev/null
-            rm -rf "$TEMP_STOW_DIR"
-        else
-            if [ "$FORCE_INSTALL" = true ]; then
-                stow -vD --target="$HOME" "$pkg" 2>/dev/null || true
-            fi
-            stow -v --target="$HOME" "$pkg"
+        TEMP_STOW_DIR="/tmp/stow-single-$pkg"
+        rm -rf "$TEMP_STOW_DIR"
+        mkdir -p "$TEMP_STOW_DIR/$pkg"
+        cp "$file" "$TEMP_STOW_DIR/$pkg/"
+
+        pushd "$TEMP_STOW_DIR" >/dev/null
+        if [ "$FORCE_INSTALL" = true ]; then
+            stow -vD --target="$HOME" "$pkg" 2>/dev/null || true
         fi
+        stow -v --target="$HOME" "$pkg"
+        popd >/dev/null
+
+        rm -rf "$TEMP_STOW_DIR"
     done
+
+    if [ -d "$CLONE_DIR/.config" ]; then
+        cd "$CLONE_DIR/.config"
+        mkdir -p "$HOME/.config"
+        for pkg in * .[^.]*; do
+            [ "$pkg" = "." ] && continue
+            [ "$pkg" = ".." ] && continue
+            [ ! -e "$pkg" ] && continue
+
+            if [ "$FORCE_INSTALL" = true ]; then
+                stow -vD --target="$HOME/.config" "$pkg" 2>/dev/null || true
+            fi
+            stow -v --target="$HOME/.config" "$pkg"
+        done
+    fi
 
     echo "Dotfiles applied via stow."
 }
+
 
 set_default_shell() {
     print_message "Setting zsh as default shell..."
