@@ -185,11 +185,14 @@ install_zsh_plugins() {
 }
 
 
+
 stow_dotfiles() {
     print_message "Applying dotfiles with GNU stow..."
 
-    if [ ! -d "$CLONE_DIR" ]; then
-        echo "Warning: Clone directory not present."
+    stow_root="$CLONE_DIR/home"
+
+    if [ ! -d "$stow_root" ]; then
+        echo "Warning: '$stow_root' not found."
         return 0
     fi
 
@@ -198,46 +201,17 @@ stow_dotfiles() {
         exit 1
     fi
 
-    cd "$CLONE_DIR"
-    for file in .[^.]*; do
-        [ "$file" = "." ] && continue
-        [ "$file" = ".." ] && continue
-        [ ! -f "$file" ] && continue  
+    cd "$stow_root"
 
-        pkg="$file"  
-
-        TEMP_STOW_DIR="/tmp/stow-single-$pkg"
-        rm -rf "$TEMP_STOW_DIR"
-        mkdir -p "$TEMP_STOW_DIR/$pkg"
-        cp "$file" "$TEMP_STOW_DIR/$pkg/"
-
-        pushd "$TEMP_STOW_DIR" >/dev/null
-        if [ "$FORCE_INSTALL" = true ]; then
-            stow -vD --target="$HOME" "$pkg" 2>/dev/null || true
-        fi
-        stow -v --target="$HOME" "$pkg"
-        popd >/dev/null
-
-        rm -rf "$TEMP_STOW_DIR"
-    done
-
-    if [ -d "$CLONE_DIR/.config" ]; then
-        cd "$CLONE_DIR/.config"
-        mkdir -p "$HOME/.config"
-        for pkg in * .[^.]*; do
-            [ "$pkg" = "." ] && continue
-            [ "$pkg" = ".." ] && continue
-            [ ! -e "$pkg" ] && continue
-
-            if [ "$FORCE_INSTALL" = true ]; then
-                stow -vD --target="$HOME/.config" "$pkg" 2>/dev/null || true
-            fi
-            stow -v --target="$HOME/.config" "$pkg"
-        done
+    if [ "$FORCE_INSTALL" = true ]; then
+        stow -vD --target="$HOME" . --ignore='.git' 2>/dev/null || true
     fi
+
+    stow -v --target="$HOME" . --ignore='.git'
 
     echo "Dotfiles applied via stow."
 }
+
 
 
 set_default_shell() {
