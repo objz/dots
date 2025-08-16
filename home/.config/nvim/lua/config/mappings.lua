@@ -64,10 +64,10 @@ wk.add({
 	{ "<leader>fa", "<cmd>Telescope grep_string<cr>", desc = "Search for word in system" },
 	{ "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live grep in workspace" },
 	-- { "<leader>fr", "<cmd>Telescope oldfiles<cr>", desc = "Recent files" },
-	{ "<leader>fc", "<cmd>Telescope command_history<cr>", desc = "Command history" },
+	{ "<leader>fh", "<cmd>Telescope command_history<cr>", desc = "Command history" },
 	-- { "<leader>fz", "<cmd>Telescope zoxide list<cr>", desc = "Recent directories" },
 	{ "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "Open buffers" },
-	{ "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "Help tags" },
+	{ "<leader>ft", "<cmd>Telescope help_tags<cr>", desc = "Help tags" },
 })
 
 -- Views & Windows
