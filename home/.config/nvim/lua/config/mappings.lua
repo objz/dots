@@ -6,6 +6,7 @@ end
 
 vim.g.copilot_no_tab_map = true
 vim.api.nvim_set_keymap("i", "<Right>", 'copilot#Accept("<CR>")', { expr = true, silent = true })
+vim.keymap.set("i", "<Space>", "<Space>", { noremap = true, silent = true })
 
 -- Window movement
 wk.add({
@@ -59,9 +60,9 @@ wk.add({
 -- Find & Search
 wk.add({
 	{ "<leader>f", group = "Find & Search" },
-	-- { "<leader>ff", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "Search in current buffer" },
+	{ "<leader>fc", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "Search in current buffer" },
 	{ "<leader>fa", "<cmd>Telescope grep_string<cr>", desc = "Search for word in system" },
-	-- { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live grep in workspace" },
+	{ "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live grep in workspace" },
 	-- { "<leader>fr", "<cmd>Telescope oldfiles<cr>", desc = "Recent files" },
 	{ "<leader>fc", "<cmd>Telescope command_history<cr>", desc = "Command history" },
 	-- { "<leader>fz", "<cmd>Telescope zoxide list<cr>", desc = "Recent directories" },
