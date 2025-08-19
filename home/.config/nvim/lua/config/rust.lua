@@ -292,3 +292,68 @@ do
     })
     dap.configurations.rust = rust_configs
 end
+
+-- ===========================
+-- LSP configuration (export)
+-- ===========================
+local M = {}
+
+local function make_ra_config()
+    local mason_root = vim.env.MASON or (vim.fn.stdpath("data") .. "/mason")
+    local ra_bin = mason_root .. "/bin/rust-analyzer"
+    if vim.fn.executable(ra_bin) ~= 1 then
+        ra_bin = "rust-analyzer"
+    end
+
+    local util = require("lspconfig.util")
+    local rooter = util.root_pattern("Cargo.toml", "rust-project.json", ".git")
+
+    local settings = {
+        ["rust-analyzer"] = {
+            cargo = {
+                allTargets = false,
+                buildScripts = { enable = false },
+            },
+            check = {
+                command = "check",
+                allTargets = false,
+            },
+            procMacro = { enable = false },
+            files = {
+                watcher = "server",
+                excludeDirs = { "target", ".git", ".cargo", ".rustup", "node_modules" },
+            },
+            diagnostics = {
+                enable = true,
+                experimental = { enable = false },
+            },
+            inlayHints = {
+                typeHints = { enable = true },
+                parameterHints = { enable = false },
+                maxLength = 30,
+            },
+            completion = {
+                autoimport = { enable = true },
+            },
+        },
+    }
+
+    local capabilities = vim.lsp.protocol.make_client_capabilities()
+    pcall(function()
+        capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
+    end)
+
+    return {
+        cmd = { ra_bin },
+        root_dir = function(fname)
+            return rooter(fname) or vim.loop.cwd()
+        end,
+        settings = settings,
+        capabilities = capabilities,
+        flags = { debounce_text_changes = 150 },
+    }
+end
+
+M.get_config = make_ra_config
+
+return M

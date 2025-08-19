@@ -6,7 +6,7 @@ end
 
 vim.g.copilot_no_tab_map = true
 vim.api.nvim_set_keymap("i", "<Right>", 'copilot#Accept("<CR>")', { expr = true, silent = true })
-vim.keymap.set("i", "<Space>", "<Space>", { noremap = true, silent = true })
+vim.keymap.set({ "n", "x", "s" }, "<Space>", "<Nop>", { noremap = true, silent = true })
 
 -- Window movement
 wk.add({

@@ -40,6 +40,21 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+local group = vim.api.nvim_create_augroup("UserRustLsp", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+	group = group,
+	pattern = { "rust" },
+	callback = function(args)
+		local lspconfig = require("lspconfig")
+		local cfg = require("config.rust").get_config()
+		if not cfg then return end
+		if not lspconfig.rust_analyzer.manager then
+			lspconfig.rust_analyzer.setup(cfg)
+		end
+		lspconfig.rust_analyzer.manager.try_add(args.buf)
+	end,
+})
+
 vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(args)
 		local client = vim.lsp.get_client_by_id(args.data.client_id)
@@ -142,6 +157,7 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 })
 
 vim.fn.sign_define("DapBreakpoint", { text = "●", texthl = "DapBreakpoint", linehl = "", numhl = "" })
-vim.fn.sign_define("DapStopped", { text = "➜", texthl = "DapStopped", linehl = "DapStoppedLine", numhl = "DapStoppedLine" })
+vim.fn.sign_define("DapStopped",
+	{ text = "➜", texthl = "DapStopped", linehl = "DapStoppedLine", numhl = "DapStoppedLine" })
 vim.fn.sign_define("DapBreakpointCondition", { text = "◆", texthl = "DapBreakpointCondition" })
 vim.fn.sign_define("DapLogPoint", { text = "🛈", texthl = "DapLogPoint" })

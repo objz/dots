@@ -29,7 +29,7 @@ return {
 				},
 				automatic_installation = true,
 				automatic_enable = {
-					exclude = { "jdtls" },
+					exclude = { "jdtls", "rust_analyzer" }, 
 				},
 
 			})

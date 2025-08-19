@@ -13,7 +13,11 @@ local options = {
 	undodir = "/tmp/.nvimdid",
 	undofile = true,
 	confirm = true,
-    signcolumn = "yes:1",
+	signcolumn = "yes:1",
+	timeout = true,
+	timeoutlen = 300,
+	ttimeout = true,
+	ttimeoutlen = 10,
 }
 
 
