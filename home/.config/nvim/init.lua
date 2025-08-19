@@ -17,7 +17,7 @@ local options = {
 	timeout = true,
 	timeoutlen = 300,
 	ttimeout = true,
-	ttimeoutlen = 10,
+	ttimeoutlen = 1,
 }
 
 

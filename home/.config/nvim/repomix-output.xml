@@ -523,7 +523,7 @@ end
 
 vim.g.copilot_no_tab_map = true
 vim.api.nvim_set_keymap("i", "<Right>", 'copilot#Accept("<CR>")', { expr = true, silent = true })
-vim.keymap.set("i", "<Space>", "<Space>", { noremap = true, silent = true })
+vim.keymap.set({ "n", "x", "s" }, "<Space>", "<Nop>", { noremap = true, silent = true })
 
 -- Window movement
 wk.add({
@@ -985,7 +985,7 @@ do
 end
 
 -- ===========================
--- LSP configuration 
+-- LSP configuration (export)
 -- ===========================
 local M = {}
 
@@ -1823,7 +1823,11 @@ local options = {
 	undodir = "/tmp/.nvimdid",
 	undofile = true,
 	confirm = true,
-    signcolumn = "yes:1",
+	signcolumn = "yes:1",
+	timeout = true,
+	timeoutlen = 300,
+	ttimeout = true,
+	ttimeoutlen = 10,
 }
 
 

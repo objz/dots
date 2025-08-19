@@ -40,6 +40,7 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+
 local group = vim.api.nvim_create_augroup("UserRustLsp", { clear = true })
 vim.api.nvim_create_autocmd("FileType", {
 	group = group,
@@ -51,9 +52,10 @@ vim.api.nvim_create_autocmd("FileType", {
 		if not lspconfig.rust_analyzer.manager then
 			lspconfig.rust_analyzer.setup(cfg)
 		end
-		lspconfig.rust_analyzer.manager.try_add(args.buf)
+		lspconfig.rust_analyzer.manager:try_add(args.buf)
 	end,
 })
+
 
 vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(args)
