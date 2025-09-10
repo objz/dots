@@ -1,0 +1,15 @@
+background = #1c1c1c
+foreground = #e6e7e9
+
+cursor-color = #7fc8ff
+selection-background = #323437
+selection-foreground = #e6e7e9
+
+window-padding-x = 8
+window-padding-y = 6
+
+font-family = Iosevka Term
+font-size = 10
+
+
+shell-integration = fish

@@ -4,17 +4,19 @@ argparse -n 'install.fish' -X 0 \
     'h/help' \
     'noconfirm' \
     'opt' \
+    'nivida' \
     -- $argv
 or exit
 
 # Print help
 if set -q _flag_h
-    echo 'usage: ./install.sh [-h] [--noconfirm] [--opt]'
+    echo 'usage: ./install.sh [-h] [--noconfirm] [--opt] [--nivida]'
     echo
     echo 'options:'
     echo '  -h, --help                  show this help message and exit'
     echo '  --noconfirm                 do not confirm package installation'
     echo '  --opt                       install optional packages (e.g. Discord)'
+    echo '  --nivida                    install NVIDIA (open dkms) + apply VRAM profile fix'
     exit
 end
 
@@ -122,17 +124,88 @@ cd (dirname (status filename)) || exit 1
 # like pkgfile for example
 #
 
-# Install packages
-log 'Installing packages...'
-$aur_helper -S --needed - < packages.txt $noconfirm
-
-
-# Enable services
 log 'Generating pkgfile database...'
+sudo pacman -S --needed pkgfile $noconfirm
 sudo pkgfile --update
 sudo systemctl enable --now pkgfile-update.timer
 
+if test -f packages.txt
+    log 'Installing packages from packages.txt...'
+    $aur_helper -S --needed - < pkglist.txt $noconfirm
+end
 
+log 'Installing Niri essentials...'
+# Notifications
+$aur_helper -S --needed mako $noconfirm
+
+# Portals & keyring
+$aur_helper -S --needed xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-gnome gnome-keyring $noconfirm
+
+# Polkit agent 
+$aur_helper -S --needed polkit-gnome $noconfirm
+
+# Xwayland satellite for X11 apps
+$aur_helper -S --needed xwayland-satellite $noconfirm
+
+log 'Enabling mako notification daemon (user)...'
+systemctl --user enable --now mako.service ^/dev/null; or begin
+    systemctl --user enable --now mako ^/dev/null
+end
+
+set -l portals_dir $config/xdg-desktop-portal
+mkdir -p $portals_dir
+set -l portals_conf $portals_dir/portals.conf
+log "Writing $portals_conf..."
+printf '%s\n' \
+'[preferred]' \
+'org.freedesktop.impl.portal.FileChooser=gtk;' \
+> $portals_conf
+
+log 'Setting GNOME interface color-scheme to prefer-dark (via dconf)...'
+dconf write /org/gnome/desktop/interface/color-scheme '"prefer-dark"' ^/dev/null
+
+log 'Ensuring gnome-keyring (user) is active...'
+systemctl --user enable --now gnome-keyring-daemon.service ^/dev/null; or true
+
+log 'Enabling xwayland-satellite (user)...'
+systemctl --user enable --now xwayland-satellite.service ^/dev/null
+
+# NVIDIA (open dkms + VRAM profile) 
+if set -q _flag_nivida
+    log 'Installing NVIDIA (open dkms) and userspace...'
+    sudo pacman -S --needed dkms linux-headers nvidia-open-dkms nvidia-utils lib32-nvidia-utils nvidia-settings $noconfirm
+
+    log 'Enabling nvidia-persistenced...'
+    sudo systemctl enable --now nvidia-persistenced.service ^/dev/null
+
+    log 'Applying NVIDIA VRAM profile fix...'
+    set -l nvp_dir /etc/nvidia/nvidia-application-profiles-rc.d
+    set -l nvp_file $nvp_dir/50-limit-free-buffer-pool-in-wayland-compositors.json
+    sudo mkdir -p $nvp_dir
+    printf '%s\n' \
+'{' \
+'    "rules": [' \
+'        {' \
+'            "pattern": {' \
+'                "feature": "procname",' \
+'                "matches": "niri"' \
+'            },' \
+'            "profile": "Limit Free Buffer Pool On Wayland Compositors"' \
+'        }' \
+'    ],' \
+'    "profiles": [' \
+'        {' \
+'            "name": "Limit Free Buffer Pool On Wayland Compositors",' \
+'            "settings": [' \
+'                {' \
+'                    "key": "GLVidHeapReuseRatio",' \
+'                    "value": 0' \
+'                }' \
+'            ]' \
+'        }' \
+'    ]' \
+'}' | sudo tee $nvp_file >/dev/null
+end
 
 # Starship
 if confirm-overwrite $config/starship.toml
@@ -141,11 +214,35 @@ if confirm-overwrite $config/starship.toml
 end
 
 # Fish
+if confirm-overwrite $config/btop
+    log 'Installing btop config...'
+    ln -s (realpath btop) $config/btop
+end
+
 if confirm-overwrite $config/fish
     log 'Installing fish config...'
     ln -s (realpath fish) $config/fish
 end
 
+if confirm-overwrite $config/fuzzel
+    log 'Installing fuzzel config...'
+    ln -s (realpath fuzzel) $config/fuzzel
+end
+
+if confirm-overwrite $config/ghostty
+    log 'Installing ghostty config...'
+    ln -s (realpath ghostty) $config/ghostty
+end
+
+if confirm-overwrite $config/niri
+    log 'Installing niri config...'
+    ln -s (realpath niri) $config/niri
+end
+
+if confirm-overwrite $config/superfile
+    log 'Installing superfile config...'
+    ln -s (realpath superfile) $config/superfile
+end
 # Optional installs
 if set -q _flag_opt
     log 'Installing optional software...'
