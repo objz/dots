@@ -4,19 +4,19 @@ argparse -n 'install.fish' -X 0 \
     'h/help' \
     'noconfirm' \
     'opt' \
-    'nivida' \
+    'nvidia' \
     -- $argv
 or exit
 
 # Print help
 if set -q _flag_h
-    echo 'usage: ./install.sh [-h] [--noconfirm] [--opt] [--nivida]'
+    echo 'usage: ./install.sh [-h] [--noconfirm] [--opt] [--nvidia]'
     echo
     echo 'options:'
     echo '  -h, --help                  show this help message and exit'
     echo '  --noconfirm                 do not confirm package installation'
     echo '  --opt                       install optional packages (e.g. Discord)'
-    echo '  --nivida                    install NVIDIA (open dkms) + apply VRAM profile fix'
+    echo '  --nvidia                    install NVIDIA (open dkms) + apply VRAM profile fix'
     exit
 end
 
@@ -131,7 +131,7 @@ sudo systemctl enable --now pkgfile-update.timer
 
 if test -f packages.txt
     log 'Installing packages from packages.txt...'
-    $aur_helper -S --needed - < pkglist.txt $noconfirm
+    $aur_helper -S --needed - < packages.txt $noconfirm
 end
 
 log 'Installing Niri essentials...'
@@ -164,14 +164,11 @@ printf '%s\n' \
 log 'Setting GNOME interface color-scheme to prefer-dark (via dconf)...'
 dconf write /org/gnome/desktop/interface/color-scheme '"prefer-dark"' ^/dev/null
 
-log 'Ensuring gnome-keyring (user) is active...'
-systemctl --user enable --now gnome-keyring-daemon.service ^/dev/null; or true
-
 log 'Enabling xwayland-satellite (user)...'
 systemctl --user enable --now xwayland-satellite.service ^/dev/null
 
 # NVIDIA (open dkms + VRAM profile) 
-if set -q _flag_nivida
+if set -q _flag_nvidia
     log 'Installing NVIDIA (open dkms) and userspace...'
     sudo pacman -S --needed dkms linux-headers nvidia-open-dkms nvidia-utils lib32-nvidia-utils nvidia-settings $noconfirm
 
@@ -249,9 +246,6 @@ if set -q _flag_opt
 
     log 'Installing Discord...'
     $aur_helper -S --needed discord equicord-installer-bin $noconfirm
-
-    sudo Equilotl -install -location /opt/discord
-    sudo Equilotl -install-openasar -location /opt/discord
 
     $aur_helper -Rns equicord-installer-bin $noconfirm
 end
