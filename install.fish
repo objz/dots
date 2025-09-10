@@ -207,38 +207,43 @@ end
 # Starship
 if confirm-overwrite $config/starship.toml
     log 'Installing starship config...'
-    ln -s (realpath starship.toml) $config/starship.toml
+    ln -s (realpath config/starship.toml) $config/starship.toml
+end
+
+# Btop
+if confirm-overwrite $config/btop
+    log 'Installing btop config...'
+    ln -s (realpath config/btop) $config/btop
 end
 
 # Fish
-if confirm-overwrite $config/btop
-    log 'Installing btop config...'
-    ln -s (realpath btop) $config/btop
-end
-
 if confirm-overwrite $config/fish
     log 'Installing fish config...'
-    ln -s (realpath fish) $config/fish
+    ln -s (realpath config/fish) $config/fish
 end
 
+# Fuzzel
 if confirm-overwrite $config/fuzzel
     log 'Installing fuzzel config...'
-    ln -s (realpath fuzzel) $config/fuzzel
+    ln -s (realpath config/fuzzel) $config/fuzzel
 end
 
+# Ghostty
 if confirm-overwrite $config/ghostty
     log 'Installing ghostty config...'
-    ln -s (realpath ghostty) $config/ghostty
+    ln -s (realpath config/ghostty) $config/ghostty
 end
 
+# Niri
 if confirm-overwrite $config/niri
     log 'Installing niri config...'
-    ln -s (realpath niri) $config/niri
+    ln -s (realpath config/niri) $config/niri
 end
 
+# Superfile
 if confirm-overwrite $config/superfile
     log 'Installing superfile config...'
-    ln -s (realpath superfile) $config/superfile
+    ln -s (realpath config/superfile) $config/superfile
 end
 # Optional installs
 if set -q _flag_opt
