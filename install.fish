@@ -136,7 +136,7 @@ end
 # Niri essentials (packages only here)
 log 'Installing Niri essentials (packages only)...'
 # Notifications
-$aur_helper -S --needed mako $noconfirm
+$aur_helper -S --needed dunst $noconfirm
 
 # Portals & keyring
 $aur_helper -S --needed xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-gnome gnome-keyring $noconfirm
@@ -171,12 +171,10 @@ end
 # POST-INSTALL CONFIG / ENABLING
 # ---------------------------------
 
-# pkgfile: update DB and enable timer (after pkgfile is installed)
 log 'Generating pkgfile database and enabling timer...'
 sudo pkgfile --update
 sudo systemctl enable --now pkgfile-update.timer
 
-# xdg-desktop-portal preference (after portals are installed)
 set -l portals_dir $config/xdg-desktop-portal
 mkdir -p $portals_dir
 set -l portals_conf $portals_dir/portals.conf
@@ -186,13 +184,11 @@ printf '%s\n' \
 'org.freedesktop.impl.portal.FileChooser=gtk;' \
 > $portals_conf
 
-# GNOME prefer-dark (don’t suppress errors — fail loudly if dconf/session not set up)
 log 'Setting GNOME interface color-scheme to prefer-dark (via dconf)...'
 dconf write /org/gnome/desktop/interface/color-scheme '"prefer-dark"'
 
-# Enable user services (after packages exist)
-log 'Enabling mako notification daemon (user)...'
-systemctl --user enable --now mako.service; or systemctl --user enable --now mako
+log 'Enabling dunst notification daemon (user)...'
+systemctl --user enable --now dunst.service
 
 log 'Enabling xwayland-satellite (user)...'
 systemctl --user enable --now xwayland-satellite.service
@@ -284,6 +280,12 @@ end
 if confirm-overwrite $config/nvim
     log 'Installing neovim config...'
     ln -s (realpath config/nvim) $config/nvim
+end
+
+# Dunst
+if confirm-overwrite $config/dunst
+    log 'Installing dunst config...'
+    ln -s (realpath config/dunst) $config/dunst
 end
 
 # Firefox 

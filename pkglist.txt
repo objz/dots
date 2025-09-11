@@ -32,3 +32,4 @@ meson
 cmake
 pkg-config
 cliphist
+libnotify

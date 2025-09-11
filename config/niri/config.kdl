@@ -134,21 +134,24 @@ output "DP-3" {
 binds {
     mod+shift+slash { show-hotkey-overlay; }
 
-    // suggested binds for running programs: terminal, app launcher, screen locker.
     mod+t hotkey-overlay-title="open a terminal: ghostty" { spawn "ghostty"; }
     mod+a hotkey-overlay-title="run an application: fuzzel" { spawn "fuzzel"; }
     mod+x hotkey-overlay-title="open cliboard history: fuzzel" { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
     mod+b hotkey-overlay-title="open a browser: firefox" { spawn "firefox"; }
 
 
-    // example volume keys mappings for pipewire & wireplumber.
-    // the allow-when-locked=true property makes them work even when the session is locked.
-    // using spawn-sh allows to pass multiple arguments together with the command.
 
-    xf86audioraisevolume allow-when-locked=true { spawn-sh "wpctl set-volume '@DEFAULT_AUDIO_SINK@' 0.1+"; }
-    xf86audiolowervolume allow-when-locked=true { spawn-sh "wpctl set-volume '@DEFAULT_AUDIO_SINK@' 0.1-"; }
-    xf86audiomute        allow-when-locked=true { spawn-sh "wpctl set-mute '@DEFAULT_AUDIO_SINK@' toggle"; }
-    xf86audiomicmute     allow-when-locked=true { spawn-sh "wpctl set-mute '@DEFAULT_AUDIO_SOURCE@' toggle"; }
+
+    xf86audioraisevolume allow-when-locked=true { spawn "volctl -o i 5"; }
+    xf86audiolowervolume allow-when-locked=true { spawn "volctl -o d 5"; }
+    xf86audiomute        allow-when-locked=true { spawn "volctl -o m"; }
+    xf86audiomicmute     allow-when-locked=true { spawn "volctl -i m"; }
+
+    xf86audioplay        { spawn "volctl -p spotify p"; }   # toggle play/pause
+    xf86audionext        { spawn "volctl -p spotify n"; }   # next track
+    xf86audioprev        { spawn "volctl -p spotify b"; }   # previous track
+
+
 
     mod+o repeat=false { toggle-overview; }
 
