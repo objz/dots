@@ -34,3 +34,4 @@ pkg-config
 cliphist
 libnotify
 playerctl
+swww
