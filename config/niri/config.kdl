@@ -144,10 +144,11 @@ binds {
     // example volume keys mappings for pipewire & wireplumber.
     // the allow-when-locked=true property makes them work even when the session is locked.
     // using spawn-sh allows to pass multiple arguments together with the command.
-    xf86audioraisevolume allow-when-locked=true { spawn-sh "wpctl set-volume @default_audio_sink@ 0.1+"; }
-    xf86audiolowervolume allow-when-locked=true { spawn-sh "wpctl set-volume @default_audio_sink@ 0.1-"; }
-    xf86audiomute        allow-when-locked=true { spawn-sh "wpctl set-mute @default_audio_sink@ toggle"; }
-    xf86audiomicmute     allow-when-locked=true { spawn-sh "wpctl set-mute @default_audio_source@ toggle"; }
+
+    xf86audioraisevolume allow-when-locked=true { spawn-sh "wpctl set-volume '@DEFAULT_AUDIO_SINK@' 0.1+"; }
+    xf86audiolowervolume allow-when-locked=true { spawn-sh "wpctl set-volume '@DEFAULT_AUDIO_SINK@' 0.1-"; }
+    xf86audiomute        allow-when-locked=true { spawn-sh "wpctl set-mute '@DEFAULT_AUDIO_SINK@' toggle"; }
+    xf86audiomicmute     allow-when-locked=true { spawn-sh "wpctl set-mute '@DEFAULT_AUDIO_SOURCE@' toggle"; }
 
     mod+o repeat=false { toggle-overview; }
 
