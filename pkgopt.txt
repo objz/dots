@@ -1,0 +1,9 @@
+nodejs
+npm
+jdk21-openjdk
+python
+python-pip
+rustup
+fd
+jq
+

@@ -160,6 +160,11 @@ if set -q _flag_opt
     $aur_helper -S --needed discord equicord-installer-bin $noconfirm
     # Immediately remove the installer helper again (by your design)
     $aur_helper -Rns equicord-installer-bin $noconfirm
+
+    if test -f pkgopt.txt
+	log 'Installing optional packages...'
+    $aur_helper -S --needed - < pkgopt.txt $noconfirm
+	end
 end
 
 # ---------------------------------

@@ -12,12 +12,8 @@ vim.filetype.add({
 	extension = {
 		zsh = "sh",
 		sh = "sh",
-	},
-	filename = {
-		[".zshrc"] = "sh",
-		["zshrc"] = "sh",
-		[".zshenv"] = "sh",
-	},
+		fish = "sh",
+	}
 })
 
 vim.api.nvim_create_autocmd("FileType", {
