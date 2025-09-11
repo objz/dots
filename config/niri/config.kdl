@@ -91,6 +91,7 @@ animations {
 window-rule {
     geometry-corner-radius 8
     clip-to-geometry true
+    opacity 0.98
 }
 
 window-rule {
