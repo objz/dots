@@ -12,4 +12,5 @@ font-family = Iosevka Term
 font-size = 10
 
 
+keybind = ctrl+enter=unbind
 shell-integration = fish

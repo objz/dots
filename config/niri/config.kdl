@@ -331,7 +331,6 @@ binds {
     mod+ctrl+r { reset-window-height; }
     mod+f { maximize-column; }
     mod+shift+f { fullscreen-window; }
-	ctrl+return { action = "unbound" }
     // expand the focused column to space not taken up by other fully visible columns.
     // makes the column "fill the rest of the space".
     mod+ctrl+f { expand-column-to-available-width; }
