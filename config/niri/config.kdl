@@ -37,7 +37,8 @@ layout {
 }
 
 
-spawn-at-startup "cliphist store"
+spawn-at-startup "wl-paste --type text --watch cliphist store"
+spawn-at-startup "wl-paste --type image --watch cliphist store"
 spawn-at-startup "udiskie --smart-tray"
 
 // spawn-sh-at-startup "qs -c ~/source/qs/myawesomeshell"
