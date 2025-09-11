@@ -274,3 +274,21 @@ if confirm-overwrite $config/superfile
     log 'Installing superfile config...'
     ln -s (realpath config/superfile) $config/superfile
 end
+
+# Neovim
+if confirm-overwrite $config/neovim
+    log 'Installing neovim config...'
+    ln -s (realpath config/neovim) $config/neovim
+end
+
+# Firefox 
+set -l ff_profile (ls ~/.mozilla/firefox/*.default-release | head -n1)
+if test -n "$ff_profile"
+    set -l ff_chrome $ff_profile/chrome
+    mkdir -p $ff_chrome
+    if confirm-overwrite $ff_chrome/userChrome.css
+        log 'Installing Firefox userChrome.css...'
+        ln -s (realpath config/firefox/userChrome.css) $ff_chrome/userChrome.css
+    end
+end
+
