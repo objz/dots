@@ -142,14 +142,17 @@ binds {
 
 
 
-    xf86audioraisevolume allow-when-locked=true { spawn "volctl -o i 5"; }
-    xf86audiolowervolume allow-when-locked=true { spawn "volctl -o d 5"; }
-    xf86audiomute        allow-when-locked=true { spawn "volctl -o m"; }
-    xf86audiomicmute     allow-when-locked=true { spawn "volctl -i m"; }
 
-    xf86audioplay        { spawn "volctl -p spotify p"; }   
-    xf86audionext        { spawn "volctl -p spotify n"; }  
-    xf86audioprev        { spawn "volctl -p spotify b"; } 
+    xf86audioraisevolume allow-when-locked=true { spawn-sh "fish -c 'volctl -o i'"; }
+    xf86audiolowervolume allow-when-locked=true { spawn-sh "fish -c 'volctl -o d'"; }
+    xf86audiomute        allow-when-locked=true { spawn-sh "fish -c 'volctl -o m'"; }
+    xf86audiomicmute     allow-when-locked=true { spawn-sh "fish -c 'volctl -i m'"; }
+
+    xf86audioplay        { spawn-sh "fish -c 'volctl -p p'"; }   
+    xf86audionext        { spawn-sh "fish -c 'volctl -p n'"; }  
+    xf86audioprev        { spawn-sh "fish -c 'volctl -p b'"; } 
+
+
 
 
 
