@@ -193,7 +193,7 @@ log 'Enabling xwayland-satellite (user)...'
 systemctl --user enable --now xwayland-satellite.service
 
 log 'Enabling ly'
-systemctl --user enable --now ly
+sudo systemctl enable ly
 
 # NVIDIA runtime bits (only if installed)
 if set -q _flag_nvidia
