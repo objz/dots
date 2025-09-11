@@ -41,8 +41,8 @@ spawn-sh-at-startup "wl-paste --type text --watch cliphist store"
 spawn-sh-at-startup "wl-paste --type image --watch cliphist store"
 spawn-sh-at-startup "udiskie --smart-tray"
 spawn-at-startup "discord"
-spawn-sh-at-startup "swww-daemon"
-spawn-at-startup "fish -c 'randwall ~/pictures/wallpapers'"
+spawn-at-startup "swww-daemon"
+// spawn-at-startup "fish -c 'randwall ~/pictures/wallpapers'"
 // spawn-sh-at-startup "qs -c ~/source/qs/myawesomeshell"
 
 hotkey-overlay {
@@ -139,6 +139,9 @@ binds {
     mod+a hotkey-overlay-title="run an application: fuzzel" { spawn "fuzzel"; }
     mod+x hotkey-overlay-title="open cliboard history: fuzzel" { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
     mod+b hotkey-overlay-title="open a browser: firefox" { spawn "firefox"; }
+    alt+r hotkey-overlay-title="change random wallpaper" { spawn-sh "fish -c 'randwall ~/pictures/wallpapers'"; }
+
+
 
 
 
