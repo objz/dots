@@ -16,7 +16,7 @@ pipewire
 pipewire-alsa
 pipewire-pulse
 pipewire-jack
-ttf-firacode-nerd
+ttf-iosevka-nerd
 noto-fonts-emoji
 udiskie
 unzip

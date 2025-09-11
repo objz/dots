@@ -36,7 +36,6 @@ layout {
     }
 }
 
-// spawn-at-startup "waybar"
 
 spawn-at-startup "cliphist store"
 spawn-at-startup "udiskie --smart-tray"
@@ -129,7 +128,7 @@ binds {
     // suggested binds for running programs: terminal, app launcher, screen locker.
     mod+t hotkey-overlay-title="open a terminal: ghostty" { spawn "ghostty"; }
     mod+a hotkey-overlay-title="run an application: fuzzel" { spawn "fuzzel"; }
-    mod+backspace hotkey-overlay-title="lock the screen: hyprlock" { spawn "hyprlock"; }
+    mod+b hotkey-overlay-title="open a browser: firefox" { spawn "firefox"; }
 
 
     // example volume keys mappings for pipewire & wireplumber.
@@ -140,14 +139,6 @@ binds {
     xf86audiomute        allow-when-locked=true { spawn-sh "wpctl set-mute @default_audio_sink@ toggle"; }
     xf86audiomicmute     allow-when-locked=true { spawn-sh "wpctl set-mute @default_audio_source@ toggle"; }
 
-    // example brightness key mappings for brightnessctl.
-    // you can use regular spawn with multiple arguments too (to avoid going through "sh"),
-    // but you need to manually put each argument in separate "" quotes.
-    xf86monbrightnessdown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
-
-    // open/close the overview: a zoomed-out view of workspaces and windows.
-    // you can also move the mouse into the top-left hot corner,
-    // or do a four-finger swipe up on a touchpad.
     mod+o repeat=false { toggle-overview; }
 
     mod+q repeat=false { close-window; }
