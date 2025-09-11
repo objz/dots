@@ -69,7 +69,6 @@ echo '│  / _ \| |_ \| |_  /  │'
 echo '│ | (_) | |_) | |/ /   │'
 echo '│  \___/|_.__// /___|  │'
 echo '│           |__/       │'
-echo '│      		     │'
 echo '╰──────────────────────╯'
 set_color normal
 log 'Before continuing, please ensure you have made a backup of your config directory.'
@@ -117,41 +116,62 @@ if ! pacman -Q $aur_helper &> /dev/null
     $aur_helper -Y --devel --save
 end
 
-# Cd into dir
+# Cd into repo dir
 cd (dirname (status filename)) || exit 1
 
-# somewhere here I do pre commands
-# like pkgfile for example
-#
+# -------------
+# INSTALL PHASE 
+# -------------
 
-log 'Generating pkgfile database...'
+# pkgfile
+log 'Installing pkgfile...'
 sudo pacman -S --needed pkgfile $noconfirm
-sudo pkgfile --update
-sudo systemctl enable --now pkgfile-update.timer
 
-if test -f packages.txt
-    log 'Installing packages from packages.txt...'
-    $aur_helper -S --needed - < packages.txt $noconfirm
+# pkglist bulk install (if present)
+if test -f pkglist.txt
+    log 'Installing packages from pkglist.txt'
+    $aur_helper -S --needed - < pkglist.txt $noconfirm
 end
 
-log 'Installing Niri essentials...'
+# Niri essentials (packages only here)
+log 'Installing Niri essentials (packages only)...'
 # Notifications
 $aur_helper -S --needed mako $noconfirm
 
 # Portals & keyring
 $aur_helper -S --needed xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-gnome gnome-keyring $noconfirm
 
-# Polkit agent 
+# Polkit agent
 $aur_helper -S --needed polkit-gnome $noconfirm
 
 # Xwayland satellite for X11 apps
 $aur_helper -S --needed xwayland-satellite $noconfirm
 
-log 'Enabling mako notification daemon (user)...'
-systemctl --user enable --now mako.service ^/dev/null; or begin
-    systemctl --user enable --now mako ^/dev/null
+# NVIDIA (open dkms + userspace) — install only; post-install enabling happens later
+if set -q _flag_nvidia
+    log 'Installing NVIDIA (open dkms) and userspace...'
+    sudo pacman -S --needed dkms linux-headers nvidia-open-dkms nvidia-utils lib32-nvidia-utils nvidia-settings $noconfirm
 end
 
+# Optional installs
+if set -q _flag_opt
+    log 'Installing optional software...'
+    log 'Installing Discord...'
+    $aur_helper -S --needed discord equicord-installer-bin $noconfirm
+    # Immediately remove the installer helper again (by your design)
+    $aur_helper -Rns equicord-installer-bin $noconfirm
+end
+
+# ---------------------------------
+# POST-INSTALL CONFIG / ENABLING
+# ---------------------------------
+
+# pkgfile: update DB and enable timer (after pkgfile is installed)
+log 'Generating pkgfile database and enabling timer...'
+sudo pkgfile --update
+sudo systemctl enable --now pkgfile-update.timer
+
+# xdg-desktop-portal preference (after portals are installed)
 set -l portals_dir $config/xdg-desktop-portal
 mkdir -p $portals_dir
 set -l portals_conf $portals_dir/portals.conf
@@ -161,19 +181,21 @@ printf '%s\n' \
 'org.freedesktop.impl.portal.FileChooser=gtk;' \
 > $portals_conf
 
+# GNOME prefer-dark (don’t suppress errors — fail loudly if dconf/session not set up)
 log 'Setting GNOME interface color-scheme to prefer-dark (via dconf)...'
-dconf write /org/gnome/desktop/interface/color-scheme '"prefer-dark"' ^/dev/null
+dconf write /org/gnome/desktop/interface/color-scheme '"prefer-dark"'
+
+# Enable user services (after packages exist)
+log 'Enabling mako notification daemon (user)...'
+systemctl --user enable --now mako.service; or systemctl --user enable --now mako
 
 log 'Enabling xwayland-satellite (user)...'
-systemctl --user enable --now xwayland-satellite.service ^/dev/null
+systemctl --user enable --now xwayland-satellite.service
 
-# NVIDIA (open dkms + VRAM profile) 
+# NVIDIA runtime bits (only if installed)
 if set -q _flag_nvidia
-    log 'Installing NVIDIA (open dkms) and userspace...'
-    sudo pacman -S --needed dkms linux-headers nvidia-open-dkms nvidia-utils lib32-nvidia-utils nvidia-settings $noconfirm
-
     log 'Enabling nvidia-persistenced...'
-    sudo systemctl enable --now nvidia-persistenced.service ^/dev/null
+    sudo systemctl enable --now nvidia-persistenced.service
 
     log 'Applying NVIDIA VRAM profile fix...'
     set -l nvp_dir /etc/nvidia/nvidia-application-profiles-rc.d
@@ -203,6 +225,10 @@ if set -q _flag_nvidia
 '    ]' \
 '}' | sudo tee $nvp_file >/dev/null
 end
+
+# ---------------------------
+# DOTFILES / CONFIG SYMLINKS
+# ---------------------------
 
 # Starship
 if confirm-overwrite $config/starship.toml
@@ -245,14 +271,3 @@ if confirm-overwrite $config/superfile
     log 'Installing superfile config...'
     ln -s (realpath config/superfile) $config/superfile
 end
-# Optional installs
-if set -q _flag_opt
-    log 'Installing optional software...'
-
-    log 'Installing Discord...'
-    $aur_helper -S --needed discord equicord-installer-bin $noconfirm
-
-    $aur_helper -Rns equicord-installer-bin $noconfirm
-end
-
-log 'Done!'
