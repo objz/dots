@@ -19,7 +19,7 @@ pipewire-jack
 ttf-jetbrains-mono-nerd
 udiskie
 unzip
-uwsm
+ly
 wl-clipboard
 superfile
 zoxide

@@ -192,6 +192,9 @@ systemctl --user enable --now mako.service; or systemctl --user enable --now mak
 log 'Enabling xwayland-satellite (user)...'
 systemctl --user enable --now xwayland-satellite.service
 
+log 'Enabling ly'
+systemctl --user enable --now ly
+
 # NVIDIA runtime bits (only if installed)
 if set -q _flag_nvidia
     log 'Enabling nvidia-persistenced...'

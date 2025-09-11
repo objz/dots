@@ -16,15 +16,8 @@ function fish_greeting
 end
 
 
-
 starship init fish | source
 zoxide init fish --cmd cd| source
-
-if type -q uwsm
-    if uwsm check may-start
-        exec uwsm start hyprland.desktop
-    end
-end
 
 # Environment / PATH
 if type -q archlinux-java
