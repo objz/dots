@@ -276,9 +276,9 @@ if confirm-overwrite $config/superfile
 end
 
 # Neovim
-if confirm-overwrite $config/neovim
+if confirm-overwrite $config/nvim
     log 'Installing neovim config...'
-    ln -s (realpath config/neovim) $config/neovim
+    ln -s (realpath config/nvim) $config/nvim
 end
 
 # Firefox 
