@@ -147,9 +147,9 @@ binds {
     xf86audiomute        allow-when-locked=true { spawn "volctl -o m"; }
     xf86audiomicmute     allow-when-locked=true { spawn "volctl -i m"; }
 
-    xf86audioplay        { spawn "volctl -p spotify p"; }   # toggle play/pause
-    xf86audionext        { spawn "volctl -p spotify n"; }   # next track
-    xf86audioprev        { spawn "volctl -p spotify b"; }   # previous track
+    xf86audioplay        { spawn "volctl -p spotify p"; }   
+    xf86audionext        { spawn "volctl -p spotify n"; }  
+    xf86audioprev        { spawn "volctl -p spotify b"; } 
 
 
 
