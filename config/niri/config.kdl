@@ -41,8 +41,8 @@ spawn-sh-at-startup "wl-paste --type text --watch cliphist store"
 spawn-sh-at-startup "wl-paste --type image --watch cliphist store"
 spawn-sh-at-startup "udiskie --smart-tray"
 spawn-at-startup "discord"
+spawn-sh-at-startup "swww-daemon"
 spawn-at-startup "fish -c 'randwall ~/pictures/wallpapers'"
-// spawn-sh-at-startup "swww restore"
 // spawn-sh-at-startup "qs -c ~/source/qs/myawesomeshell"
 
 hotkey-overlay {

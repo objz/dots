@@ -4,7 +4,7 @@ function randwall --description 'Random wallpaper via swww'
 
     if not pgrep -u (id -u) -x swww-daemon >/dev/null
         swww init
-        sleep 0.2
+        sleep 0.4
     end
 
     set -l img (find "$WALL_DIR" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) \
