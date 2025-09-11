@@ -16,7 +16,8 @@ pipewire
 pipewire-alsa
 pipewire-pulse
 pipewire-jack
-ttf-jetbrains-mono-nerd
+ttf-fira-code-nerd
+noto-fonts-emoji
 udiskie
 unzip
 ly
@@ -26,6 +27,7 @@ zoxide
 fish
 starship
 pass
+gnupg
 meson
 cmake
 pkg-config

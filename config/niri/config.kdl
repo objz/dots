@@ -38,6 +38,9 @@ layout {
 
 // spawn-at-startup "waybar"
 
+spawn-at-startup "cliphist store"
+spawn-at-startup "udiskie --smart-tray"
+
 // spawn-sh-at-startup "qs -c ~/source/qs/myawesomeshell"
 
 hotkey-overlay {
