@@ -174,44 +174,37 @@ binds {
 
     mod+q repeat=false { close-window; }
 
-    mod+left  { focus-column-left; }
-    mod+down  { focus-window-down; }
-    mod+up    { focus-window-up; }
-    mod+right { focus-column-right; }
-    mod+h     { focus-column-left; }
-    mod+j     { focus-window-down; }
-    mod+k     { focus-window-up; }
-    mod+l     { focus-column-right; }
+    mod+left  { focus-column-or-monitor-left; }
+    mod+down  { focus-window-or-monitor-down; }
+    mod+up    { focus-window-or-monitor-up; }
+    mod+right { focus-column-or-monitor-right; }
+    mod+h     { focus-column-or-monitor-left; }
+    mod+j     { focus-window-or-monitor-down; }
+    mod+k     { focus-window-or-monitor-up; }
+    mod+l     { focus-column-or-monitor-right; }
 
-    mod+ctrl+left  { move-column-left; }
-    mod+ctrl+down  { move-window-down; }
-    mod+ctrl+up    { move-window-up; }
-    mod+ctrl+right { move-column-right; }
-    mod+ctrl+h     { move-column-left; }
-    mod+ctrl+j     { move-window-down; }
-    mod+ctrl+k     { move-window-up; }
-    mod+ctrl+l     { move-column-right; }
-
-    // alternative commands that move across workspaces when reaching
-    // the first or last window in a column.
-    // mod+j     { focus-window-or-workspace-down; }
-    // mod+k     { focus-window-or-workspace-up; }
-    // mod+ctrl+j     { move-window-down-or-to-workspace-down; }
-    // mod+ctrl+k     { move-window-up-or-to-workspace-up; }
+    mod+ctrl+left  { move-column-left-or-to-monitor-left; }
+    mod+ctrl+down  { move-window-down-or-to-workspace-down; }
+    mod+ctrl+up    { move-window-up-or-to-workspace-up; }
+    mod+ctrl+right { move-column-right-or-to-monitor-right; }
+    mod+ctrl+h     { move-column-left-or-to-monitor-left; }
+    mod+ctrl+j     { move-window-down-or-to-workspace-down; }
+    mod+ctrl+k     { move-window-up-or-to-workspace-up; }
+    mod+ctrl+l     { move-column-right-or-to-monitor-right; }
 
     mod+home { focus-column-first; }
     mod+end  { focus-column-last; }
     mod+ctrl+home { move-column-to-first; }
     mod+ctrl+end  { move-column-to-last; }
 
-    mod+shift+left  { focus-monitor-left; }
-    mod+shift+down  { focus-monitor-down; }
-    mod+shift+up    { focus-monitor-up; }
-    mod+shift+right { focus-monitor-right; }
-    mod+shift+h     { focus-monitor-left; }
-    mod+shift+j     { focus-monitor-down; }
-    mod+shift+k     { focus-monitor-up; }
-    mod+shift+l     { focus-monitor-right; }
+    // mod+shift+left  { focus-monitor-left; }
+    mod+shift+down  { focus-workspace-down; }
+    mod+shift+up    { focus-workspace-up; }
+    // mod+shift+right { focus-monitor-right; }
+    // mod+shift+h     { focus-monitor-left; }
+    mod+shift+j     { focus-workspace-down; }
+    mod+shift+k     { focus-workspace-up; }
+    // mod+shift+l     { focus-monitor-right; }
 
     mod+shift+ctrl+left  { move-column-to-monitor-left; }
     mod+shift+ctrl+down  { move-column-to-monitor-down; }
