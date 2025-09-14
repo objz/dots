@@ -184,9 +184,9 @@ binds {
     mod+l     { focus-column-or-monitor-right; }
 
     mod+shift+left  { focus-monitor-left; }
-    mod+shift+right { focus-column-monitor-right; }
-    mod+shift+h     { focus-column-monitor-left; }
-    mod+shift+l     { focus-column-monitor-right; }
+    mod+shift+right { focus-monitor-right; }
+    mod+shift+h     { focus-monitor-left; }
+    mod+shift+l     { focus-monitor-right; }
 
     mod+ctrl+left  { move-column-left-or-to-monitor-left; }
     mod+ctrl+down  { move-window-down-or-to-workspace-down; }
