@@ -8,7 +8,7 @@ eza
 firefox
 firefox-tridactyl
 flatpak
-fuzzel
+vicinae-bin
 fzf
 man-db
 neovim

@@ -27,8 +27,8 @@ layout {
     focus-ring {
         width 2
 
-        active-gradient from="#1e1f21" to="#323437" angle=45
-        inactive-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
+        inactive-gradient from="#1e1f21" to="#323437" angle=45
+        active-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
     }
 
     border {
@@ -146,8 +146,10 @@ binds {
     mod+shift+slash { show-hotkey-overlay; }
 
     mod+t hotkey-overlay-title="open a terminal: ghostty" { spawn "ghostty"; }
-    mod+a hotkey-overlay-title="run an application: fuzzel" { spawn "fuzzel"; }
-    mod+x hotkey-overlay-title="open cliboard history: fuzzel" { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
+    mod+a hotkey-overlay-title="run an application: vicinae" { spawn "vicinae"; }
+    // mod+a hotkey-overlay-title="run an application: fuzzel" { spawn "fuzzel"; }
+    // mod+x hotkey-overlay-title="open cliboard history: fuzzel" { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
+    mod+x hotkey-overlay-title="open cliboard history: vicinae" { spawn-sh "vicinae vicinae://extensions/vicinae/clipboard/history"; }
     mod+b hotkey-overlay-title="open a browser: firefox" { spawn "firefox"; }
     alt+r hotkey-overlay-title="change random wallpaper" { spawn-sh "fish -c 'randwall ~/pictures/wallpapers'"; }
 

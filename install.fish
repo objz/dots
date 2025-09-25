@@ -193,6 +193,9 @@ systemctl --user enable --now dunst.service
 log 'Enabling xwayland-satellite (user)...'
 systemctl --user enable --now xwayland-satellite.service
 
+log 'Enabling vicinae'
+sudo systemctl enable --now --user vicinae.service
+
 log 'Enabling ly'
 sudo systemctl enable ly
 
