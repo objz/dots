@@ -84,10 +84,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		local bufnr = args.buf
 		require("which-key").add({
 			{ "<leader>r",  group = "Run Configurations" },
-			{ "<leader>rd", "<cmd>9Multiterm cargo build<cr>",  desc = "cargo build" },
-			{ "<leader>rb", "<cmd>9Multiterm cargo run<cr>",    desc = "cargo run" },
-			{ "<leader>rs", "<cmd>9Multiterm cargo test<cr>",   desc = "cargo test" },
-			{ "<leader>rm", "<cmd>9Multiterm cargo update<cr>", desc = "cargo update" },
+			{ "<leader>rb", "<cmd>9Multiterm cargo build<cr>",  desc = "cargo build" },
+			{ "<leader>rr", "<cmd>9Multiterm cargo run<cr>",    desc = "cargo run" },
+			{ "<leader>rt", "<cmd>9Multiterm cargo test<cr>",   desc = "cargo test" },
+			{ "<leader>ru", "<cmd>9Multiterm cargo update<cr>", desc = "cargo update" },
 		}, { buffer = bufnr })
 	end,
 })
