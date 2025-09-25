@@ -6,4 +6,5 @@ python-pip
 rustup
 fd
 jq
+envio-bin
 
