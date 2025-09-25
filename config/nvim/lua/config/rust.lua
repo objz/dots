@@ -318,7 +318,7 @@ local function make_ra_config()
                 command = "check",
                 allTargets = false,
             },
-            procMacro = { enable = false },
+            procMacro = { enable = true },
             files = {
                 watcher = "server",
                 excludeDirs = { "target", ".git", ".cargo", ".rustup", "node_modules" },
