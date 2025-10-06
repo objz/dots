@@ -146,7 +146,7 @@ binds {
     mod+shift+slash { show-hotkey-overlay; }
 
     mod+t hotkey-overlay-title="open a terminal: ghostty" { spawn "ghostty"; }
-    mod+a hotkey-overlay-title="run an application: vicinae" { spawn "vicinae"; }
+    mod+a hotkey-overlay-title="run an application: vicinae" { spawn "vicinae toggle"; }
     // mod+a hotkey-overlay-title="run an application: fuzzel" { spawn "fuzzel"; }
     // mod+x hotkey-overlay-title="open cliboard history: fuzzel" { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
     mod+x hotkey-overlay-title="open cliboard history: vicinae" { spawn-sh "vicinae vicinae://extensions/vicinae/clipboard/history"; }
