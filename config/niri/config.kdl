@@ -115,6 +115,11 @@ window-rule {
 
 }
 
+window-rule {
+    match app-id=r#"^steam_app_.*$"#
+    open-fullscreen true
+}
+
 output "DP-1" {
     mode "2560x1440@60.000"
     position x=2560 y=0
