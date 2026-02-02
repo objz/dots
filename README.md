@@ -25,11 +25,14 @@ the `install.fish` script is for arch-based systems. you need `fish`, `git`, `su
 ### usage
 
 ```bash
-git clone --recurse-submodules <repo-url>
+git clone --recurse-submodules https://github.com/objz/dots
+cd dots
 fish ./install.fish
 fish ./install.fish --update
 fish ./install.fish --noconfirm
 fish ./install.fish --opt --nvidia
 ```
+
+note: the script does not self-clone; it expects to run inside the repo so it can link configs from `./config` and read `pkglist.txt` / `pkgopt.txt`.
 
 that’s it. hyprland branch if you want the old setup.
