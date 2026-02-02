@@ -48,13 +48,13 @@ abbr -a lr   '$AUR_HELPER -Ss'                 # search repo
 abbr -a ca   '$AUR_HELPER -Sc'                 # clean cache
 abbr -a cu   '$AUR_HELPER -Qtdq | $AUR_HELPER -Rns -'  # remove orphans
 
-function spf
-    set -gx SPF_LAST_DIR (string join '' $XDG_STATE_HOME $HOME/.local/state)/superfile/lastdir
-    command spf $argv
-    if test -f "$SPF_LAST_DIR"
-        source "$SPF_LAST_DIR" ^/dev/null
-        rm -f -- "$SPF_LAST_DIR" ^/dev/null
-    end
+function y
+	set tmp (mktemp -t "yazi-cwd.XXXXXX")
+	command yazi $argv --cwd-file="$tmp"
+	if read -z cwd < "$tmp"; and [ "$cwd" != "$PWD" ]; and test -d "$cwd"
+		builtin cd -- "$cwd"
+	end
+	rm -f -- "$tmp"
 end
 
 
