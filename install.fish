@@ -199,6 +199,24 @@ function require_cmd -a cmd
     or die "Missing required command: $cmd"
 end
 
+function systemd_unit_exists -a scope unit
+    switch $scope
+        case user
+            set -l dirs /etc/systemd/user /usr/lib/systemd/user ~/.config/systemd/user
+        case system
+            set -l dirs /etc/systemd/system /usr/lib/systemd/system
+        case '*'
+            return 1
+    end
+
+    for dir in $dirs
+        if test -e "$dir/$unit"
+            return 0
+        end
+    end
+    return 1
+end
+
 if set -q _flag_h
     show_help
     exit 0
@@ -245,11 +263,13 @@ set -l pkglist "$repo_dir/pkglist.txt"
 set -l pkgopt "$repo_dir/pkgopt.txt"
 
 set_color magenta
-echo '  ____        __        __'
-echo ' |  _ \  ___ / _| ___  / _|'
-echo ' | | | |/ _ \ |_ / _ \| |_ '
-echo ' | |_| |  __/  _| (_) |  _|'
-echo ' |____/ \___|_|  \___/|_|  '
+echo ' ░▒▓██████▓▒░░▒▓███████▓▒░       ░▒▓█▓▒░▒▓████████▓▒░      '
+echo '░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░      '
+echo '░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░      ░▒▓█▓▒░    ░▒▓██▓▒░       '
+echo '░▒▓█▓▒░░▒▓█▓▒░▒▓███████▓▒░       ░▒▓█▓▒░  ░▒▓██▓▒░         '
+echo '░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓██▓▒░           '
+echo '░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░             '
+echo ' ░▒▓██████▓▒░░▒▓███████▓▒░ ░▒▓██████▓▒░░▒▓████████▓▒░      '
 set_color normal
 log "Mode: $mode"
 
@@ -351,7 +371,13 @@ end
 try_run 'Enabling dunst (user)' systemctl --user enable --now dunst.service
 try_run 'Enabling xwayland-satellite (user)' systemctl --user enable --now xwayland-satellite.service
 try_run 'Enabling vicinae (user)' systemctl --user enable --now vicinae.service
-try_run 'Enabling ly (system)' as_root systemctl enable ly
+if systemd_unit_exists system ly@.service
+    try_run 'Enabling ly (system, tty2)' as_root systemctl enable --now ly@tty2.service
+else if systemd_unit_exists system ly@tty2.service
+    try_run 'Enabling ly (system, tty2)' as_root systemctl enable --now ly@tty2.service
+else
+    warn 'ly@.service unit not found. Skipping.'
+end
 
 if set -q _flag_nvidia
     try_run 'Enabling nvidia-persistenced' as_root systemctl enable --now nvidia-persistenced.service
@@ -391,15 +417,22 @@ end
 section 'Dotfiles'
 set -l repo_config_dir "$repo_dir/config"
 
-link_config "$repo_config_dir/starship.toml" "$config_dir/starship.toml"
-link_config "$repo_config_dir/btop" "$config_dir/btop"
-link_config "$repo_config_dir/fish" "$config_dir/fish"
-link_config "$repo_config_dir/fuzzel" "$config_dir/fuzzel"
-link_config "$repo_config_dir/ghostty" "$config_dir/ghostty"
-link_config "$repo_config_dir/niri" "$config_dir/niri"
-link_config "$repo_config_dir/superfile" "$config_dir/superfile"
-link_config "$repo_config_dir/nvim" "$config_dir/nvim"
-link_config "$repo_config_dir/dunst" "$config_dir/dunst"
+if test -d "$repo_config_dir"
+    set -l repo_entries $repo_config_dir/*
+    if test (count $repo_entries) -eq 1; and test "$repo_entries[1]" = "$repo_config_dir/*"
+        warn "No config entries found in $repo_config_dir. Skipping."
+    else
+        for entry in $repo_entries
+            set -l name (basename "$entry")
+            if test "$name" = 'firefox'
+                continue
+            end
+            link_config "$entry" "$config_dir/$name"
+        end
+    end
+else
+    warn "Missing $repo_config_dir. Skipping."
+end
 
 set -l ff_source "$repo_config_dir/firefox/userChrome.css"
 if test -e "$ff_source"
