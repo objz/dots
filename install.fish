@@ -5,300 +5,415 @@ argparse -n 'install.fish' -X 0 \
     'noconfirm' \
     'opt' \
     'nvidia' \
+    'update' \
+    'install' \
     -- $argv
-or exit
+or exit 2
 
-# Print help
-if set -q _flag_h
-    echo 'usage: ./install.sh [-h] [--noconfirm] [--opt] [--nvidia]'
+function show_help
+    echo 'usage: fish ./install.fish [--install|--update] [--noconfirm] [--opt] [--nvidia]'
+    echo
+    echo 'modes:'
+    echo '  --install                  fresh install (default)'
+    echo '  --update                   update packages, configs, and submodules'
     echo
     echo 'options:'
-    echo '  -h, --help                  show this help message and exit'
-    echo '  --noconfirm                 do not confirm package installation'
-    echo '  --opt                       install optional packages (e.g. Discord)'
-    echo '  --nvidia                    install NVIDIA (open dkms) + apply VRAM profile fix'
-    exit
+    echo '  -h, --help                 show this help message and exit'
+    echo '  --noconfirm                do not confirm package installation or overwrites'
+    echo '  --opt                      install optional packages (e.g. Discord)'
+    echo '  --nvidia                   install NVIDIA (open dkms) + apply VRAM profile fix'
 end
 
-function _out -a colour text
-    set_color $colour
-    echo $argv[3..] -- ":: $text"
+function log
+    set_color cyan
+    echo ":: $argv"
     set_color normal
 end
 
-function log -a text
-    _out cyan $text $argv[2..]
+function warn
+    set_color yellow
+    echo "!! $argv"
+    set_color normal
 end
 
-function input -a text
-    _out blue $text $argv[2..]
+function die
+    set_color red
+    echo "error: $argv"
+    set_color normal
+    exit 1
 end
 
-function confirm-overwrite -a path
-    if test -e $path -o -L $path
-        if set -q noconfirm
-            input "$path already exists. Overwrite? [Y/n]"
-            log 'Removing...'
-            rm -rf $path
-        else
-            read -l -p "input '$path already exists. Overwrite? [Y/n] ' -n" confirm || exit 1
-            if test "$confirm" = 'n' -o "$confirm" = 'N'
-                log 'Skipping...'
+function section -a title
+    set_color magenta
+    echo
+    echo "== $title =="
+    set_color normal
+end
+
+function as_root
+    if test (id -u) -eq 0
+        $argv
+    else
+        command sudo $argv
+    end
+end
+
+function run -a desc
+    set -l cmd $argv[2..]
+    if test -n "$desc"
+        log $desc
+    end
+    $cmd
+    or die "Failed: $desc"
+end
+
+function try_run -a desc
+    set -l cmd $argv[2..]
+    if test -n "$desc"
+        log $desc
+    end
+    $cmd
+    if test $status -ne 0
+        warn "Failed (continuing): $desc"
+        return 1
+    end
+    return 0
+end
+
+function confirm -a prompt default_answer
+    set -l suffix '[Y/n]'
+    if test "$default_answer" = 'no'
+        set suffix '[y/N]'
+    end
+
+    while true
+        read -l -P "$prompt $suffix " reply
+        if test -z "$reply"
+            if test "$default_answer" = 'no'
                 return 1
-            else
-                log 'Removing...'
-                rm -rf $path
             end
+            return 0
+        end
+
+        switch (string lower -- $reply)
+            case y yes
+                return 0
+            case n no
+                return 1
+        end
+    end
+end
+
+function resolve_path -a path
+    if type -q realpath
+        realpath "$path"
+    else if type -q readlink
+        readlink -f "$path"
+    else
+        echo "$path"
+    end
+end
+
+function remove_path -a target
+    if test -z "$target"
+        die 'Refusing to remove empty path'
+    end
+    rm -rf -- "$target"
+end
+
+function confirm_overwrite -a target
+    if test -e "$target" -o -L "$target"
+        if test "$auto_overwrite" = '1'
+            log "$target exists. Overwriting (auto)."
+            remove_path "$target"
+            return 0
+        end
+
+        if confirm "$target exists. Overwrite?" yes
+            remove_path "$target"
+            return 0
+        else
+            log "Skipping $target"
+            return 1
         end
     end
     return 0
 end
 
-# Variables
-set -q _flag_noconfirm && set noconfirm '--noconfirm'
-set -l aur_helper paru
-set -q XDG_CONFIG_HOME && set -l config $XDG_CONFIG_HOME || set -l config $HOME/.config
-set -q XDG_STATE_HOME && set -l state $XDG_STATE_HOME || set -l state $HOME/.local/state
+function link_config -a source target
+    if not test -e "$source"
+        warn "Missing $source. Skipping."
+        return 0
+    end
 
-# Startup prompt
-set_color magenta
-echo '╭──────────────────────╮'
-echo '│        _     _       │'
-echo '│   ___ | |__ (_)____  │'
-echo '│  / _ \| |_ \| |_  /  │'
-echo '│ | (_) | |_) | |/ /   │'
-echo '│  \___/|_.__// /___|  │'
-echo '│           |__/       │'
-echo '╰──────────────────────╯'
-set_color normal
-log 'Before continuing, please ensure you have made a backup of your config directory.'
+    set -l resolved_source (resolve_path "$source")
 
-# Prompt for backup
-if ! set -q _flag_noconfirm
-    log '[1] Two steps ahead of you!  [2] Make one for me please!'
-    read -l -p "input '=> ' -n" choice || exit 1
-
-    if contains -- "$choice" 1 2
-        if test $choice = 2
-            log "Backing up $config..."
-
-            if test -e $config.bak -o -L $config.bak
-                read -l -p "input 'Backup already exists. Overwrite? [Y/n] ' -n" overwrite || exit 1
-                if test "$overwrite" = 'n' -o "$overwrite" = 'N'
-                    log 'Skipping...'
-                else
-                    rm -rf $config.bak
-                    cp -r $config $config.bak
-                end
-            else
-                cp -r $config $config.bak
-            end
+    if test -L "$target"; and type -q readlink
+        set -l current (readlink "$target")
+        if test "$current" = "$resolved_source"
+            log "$target already linked"
+            return 0
         end
-    else
-        log 'No choice selected. Exiting...'
-        exit 1
+    end
+
+    mkdir -p (dirname "$target")
+
+    if confirm_overwrite "$target"
+        ln -s "$resolved_source" "$target"
+        log "Linked $target"
     end
 end
 
-# Install paru if not already installed
-if ! pacman -Q $aur_helper &> /dev/null
+function maybe_backup_config -a config_dir
+    log 'Before continuing, consider backing up your config directory.'
+    if test "$auto_overwrite" = '1'
+        return 0
+    end
+
+    if not confirm "Create backup at $config_dir.bak?" yes
+        return 0
+    end
+
+    if not test -d "$config_dir"
+        warn "Config directory $config_dir not found. Skipping backup."
+        return 0
+    end
+
+    set -l do_backup 1
+    if test -e "$config_dir.bak"
+        if confirm "Backup exists at $config_dir.bak. Overwrite?" no
+            remove_path "$config_dir.bak"
+        else
+            log 'Skipping backup.'
+            set do_backup 0
+        end
+    end
+
+    if test $do_backup -eq 1
+        run "Backing up $config_dir" cp -a "$config_dir" "$config_dir.bak"
+    end
+end
+
+function require_cmd -a cmd
+    type -q $cmd
+    or die "Missing required command: $cmd"
+end
+
+if set -q _flag_h
+    show_help
+    exit 0
+end
+
+if set -q _flag_install; and set -q _flag_update
+    die 'Choose either --install or --update'
+end
+
+set -l mode install
+if set -q _flag_update
+    set mode update
+end
+
+set -g auto_overwrite 0
+if set -q _flag_noconfirm
+    set auto_overwrite 1
+end
+
+set -l pacman_confirm_flags
+set -l aur_confirm_flags
+set -l makepkg_flags -si
+if set -q _flag_noconfirm
+    set pacman_confirm_flags --noconfirm
+    set aur_confirm_flags --noconfirm
+    set makepkg_flags $makepkg_flags --noconfirm
+end
+
+set -l script_dir (dirname (status filename))
+set -l repo_dir (resolve_path "$script_dir")
+cd "$repo_dir"; or die "Failed to enter $repo_dir"
+
+set -l config_dir $HOME/.config
+if set -q XDG_CONFIG_HOME
+    set config_dir $XDG_CONFIG_HOME
+end
+
+set -l aur_helper paru
+if set -q AUR_HELPER
+    set aur_helper $AUR_HELPER
+end
+
+set -l pkglist "$repo_dir/pkglist.txt"
+set -l pkgopt "$repo_dir/pkgopt.txt"
+
+set_color magenta
+echo '  ____        __        __'
+echo ' |  _ \  ___ / _| ___  / _|'
+echo ' | | | |/ _ \ |_ / _ \| |_ '
+echo ' | |_| |  __/  _| (_) |  _|'
+echo ' |____/ \___|_|  \___/|_|  '
+set_color normal
+log "Mode: $mode"
+
+section 'Preflight'
+require_cmd git
+require_cmd pacman
+if test (id -u) -ne 0
+    require_cmd sudo
+end
+
+if test "$mode" = 'install'
+    maybe_backup_config "$config_dir"
+end
+
+section 'Repository'
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1
+    if test -f "$repo_dir/.gitmodules"
+        run 'Syncing submodules' git submodule sync --recursive
+        run 'Initializing/updating submodules' git submodule update --init --recursive
+    else
+        log 'No .gitmodules found, skipping submodules.'
+    end
+else
+    warn 'Not a git worktree; skipping submodules.'
+end
+
+section 'Packages'
+if not pacman -Q $aur_helper >/dev/null 2>&1
     log "$aur_helper not installed. Installing..."
+    run "Installing build dependencies" as_root pacman -S --needed git base-devel $pacman_confirm_flags
 
-    sudo pacman -S --needed git base-devel $noconfirm
-    cd /tmp
-    git clone https://aur.archlinux.org/$aur_helper.git
-    cd $aur_helper
-    makepkg -si
-    cd ..
-    rm -rf $aur_helper
+    set -g tmp_dir (mktemp -d)
+    run "Cloning $aur_helper" git clone "https://aur.archlinux.org/$aur_helper.git" "$tmp_dir/$aur_helper"
+    cd "$tmp_dir/$aur_helper"; or die "Failed to enter $tmp_dir/$aur_helper"
+    run "Building and installing $aur_helper" makepkg $makepkg_flags
+    cd "$repo_dir"; or die "Failed to return to $repo_dir"
+    remove_path "$tmp_dir"
 
-    $aur_helper -Y --gendb
-    $aur_helper -Y --devel --save
+    run "Configuring $aur_helper metadata" $aur_helper -Y --gendb
+    run "Enabling devel tracking" $aur_helper -Y --devel --save
 end
 
-# Cd into repo dir
-cd (dirname (status filename)) || exit 1
-
-# -------------
-# INSTALL PHASE 
-# -------------
-
-# pkgfile
-log 'Installing pkgfile...'
-sudo pacman -S --needed pkgfile $noconfirm
-
-# pkglist bulk install (if present)
-if test -f pkglist.txt
-    log 'Installing packages from pkglist.txt'
-    $aur_helper -S --needed - < pkglist.txt $noconfirm
+if test "$mode" = 'update'
+    run 'Updating system packages' $aur_helper -Syu --needed $aur_confirm_flags
 end
 
-# Niri essentials (packages only here)
+run 'Installing pkgfile' as_root pacman -S --needed pkgfile $pacman_confirm_flags
+
+if test -f "$pkglist"
+    run 'Installing packages from pkglist.txt' $aur_helper -S --needed - $aur_confirm_flags < "$pkglist"
+else
+    log 'pkglist.txt not found. Skipping.'
+end
+
 log 'Installing Niri essentials (packages only)...'
-# Notifications
-$aur_helper -S --needed dunst $noconfirm
+$aur_helper -S --needed dunst $aur_confirm_flags; or die 'Failed to install dunst'
+$aur_helper -S --needed xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-gnome gnome-keyring $aur_confirm_flags; or die 'Failed to install portals/keyring'
+$aur_helper -S --needed polkit-gnome $aur_confirm_flags; or die 'Failed to install polkit-gnome'
+$aur_helper -S --needed xwayland-satellite $aur_confirm_flags; or die 'Failed to install xwayland-satellite'
 
-# Portals & keyring
-$aur_helper -S --needed xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-gnome gnome-keyring $noconfirm
-
-# Polkit agent
-$aur_helper -S --needed polkit-gnome $noconfirm
-
-# Xwayland satellite for X11 apps
-$aur_helper -S --needed xwayland-satellite $noconfirm
-
-# NVIDIA (open dkms + userspace) — install only; post-install enabling happens later
 if set -q _flag_nvidia
-    log 'Installing NVIDIA (open dkms) and userspace...'
-    sudo pacman -S --needed dkms linux-headers nvidia-open-dkms nvidia-utils lib32-nvidia-utils nvidia-settings $noconfirm
+    run 'Installing NVIDIA (open dkms) and userspace' as_root pacman -S --needed dkms linux-headers nvidia-open-dkms nvidia-utils lib32-nvidia-utils nvidia-settings $pacman_confirm_flags
 end
 
-# Optional installs
 if set -q _flag_opt
     log 'Installing optional software...'
-    log 'Installing Discord...'
-    $aur_helper -S --needed discord equicord-installer-bin $noconfirm
-    # Immediately remove the installer helper again (by your design)
-    $aur_helper -Rns equicord-installer-bin $noconfirm
+    $aur_helper -S --needed discord equicord-installer-bin $aur_confirm_flags; or die 'Failed to install Discord'
+    $aur_helper -Rns equicord-installer-bin $aur_confirm_flags; or die 'Failed to remove equicord-installer-bin'
 
-    if test -f pkgopt.txt
-	log 'Installing optional packages...'
-    $aur_helper -S --needed - < pkgopt.txt $noconfirm
-	end
+    if test -f "$pkgopt"
+        run 'Installing optional packages from pkgopt.txt' $aur_helper -S --needed - $aur_confirm_flags < "$pkgopt"
+    else
+        log 'pkgopt.txt not found. Skipping.'
+    end
 end
 
-# ---------------------------------
-# POST-INSTALL CONFIG / ENABLING
-# ---------------------------------
+section 'Post-install config'
+run 'Generating pkgfile database' as_root pkgfile --update
+try_run 'Enabling pkgfile-update timer' as_root systemctl enable --now pkgfile-update.timer
 
-log 'Generating pkgfile database and enabling timer...'
-sudo pkgfile --update
-sudo systemctl enable --now pkgfile-update.timer
+set -l portals_dir "$config_dir/xdg-desktop-portal"
+set -l portals_conf "$portals_dir/portals.conf"
+log "Writing $portals_conf"
+mkdir -p "$portals_dir"
+begin
+    printf '%s\n' \
+        '[preferred]' \
+        'org.freedesktop.impl.portal.FileChooser=gtk;' \
+        > "$portals_conf"
+end
+or die "Failed to write $portals_conf"
 
-set -l portals_dir $config/xdg-desktop-portal
-mkdir -p $portals_dir
-set -l portals_conf $portals_dir/portals.conf
-log "Writing $portals_conf..."
-printf '%s\n' \
-'[preferred]' \
-'org.freedesktop.impl.portal.FileChooser=gtk;' \
-> $portals_conf
+if type -q dconf
+    try_run 'Setting GNOME interface color-scheme to prefer-dark' dconf write /org/gnome/desktop/interface/color-scheme '"prefer-dark"'
+else
+    warn 'dconf not found. Skipping GNOME color-scheme.'
+end
 
-log 'Setting GNOME interface color-scheme to prefer-dark (via dconf)...'
-dconf write /org/gnome/desktop/interface/color-scheme '"prefer-dark"'
+try_run 'Enabling dunst (user)' systemctl --user enable --now dunst.service
+try_run 'Enabling xwayland-satellite (user)' systemctl --user enable --now xwayland-satellite.service
+try_run 'Enabling vicinae (user)' systemctl --user enable --now vicinae.service
+try_run 'Enabling ly (system)' as_root systemctl enable ly
 
-log 'Enabling dunst notification daemon (user)...'
-systemctl --user enable --now dunst.service
-
-log 'Enabling xwayland-satellite (user)...'
-systemctl --user enable --now xwayland-satellite.service
-
-log 'Enabling vicinae'
-sudo systemctl enable --now --user vicinae.service
-
-log 'Enabling ly'
-sudo systemctl enable ly
-
-# NVIDIA runtime bits (only if installed)
 if set -q _flag_nvidia
-    log 'Enabling nvidia-persistenced...'
-    sudo systemctl enable --now nvidia-persistenced.service
+    try_run 'Enabling nvidia-persistenced' as_root systemctl enable --now nvidia-persistenced.service
 
     log 'Applying NVIDIA VRAM profile fix...'
     set -l nvp_dir /etc/nvidia/nvidia-application-profiles-rc.d
-    set -l nvp_file $nvp_dir/50-limit-free-buffer-pool-in-wayland-compositors.json
-    sudo mkdir -p $nvp_dir
-    printf '%s\n' \
-'{' \
-'    "rules": [' \
-'        {' \
-'            "pattern": {' \
-'                "feature": "procname",' \
-'                "matches": "niri"' \
-'            },' \
-'            "profile": "Limit Free Buffer Pool On Wayland Compositors"' \
-'        }' \
-'    ],' \
-'    "profiles": [' \
-'        {' \
-'            "name": "Limit Free Buffer Pool On Wayland Compositors",' \
-'            "settings": [' \
-'                {' \
-'                    "key": "GLVidHeapReuseRatio",' \
-'                    "value": 0' \
-'                }' \
-'            ]' \
-'        }' \
-'    ]' \
-'}' | sudo tee $nvp_file >/dev/null
-end
-
-# ---------------------------
-# DOTFILES / CONFIG SYMLINKS
-# ---------------------------
-
-# Starship
-if confirm-overwrite $config/starship.toml
-    log 'Installing starship config...'
-    ln -s (realpath config/starship.toml) $config/starship.toml
-end
-
-# Btop
-if confirm-overwrite $config/btop
-    log 'Installing btop config...'
-    ln -s (realpath config/btop) $config/btop
-end
-
-# Fish
-if confirm-overwrite $config/fish
-    log 'Installing fish config...'
-    ln -s (realpath config/fish) $config/fish
-end
-
-# Fuzzel
-if confirm-overwrite $config/fuzzel
-    log 'Installing fuzzel config...'
-    ln -s (realpath config/fuzzel) $config/fuzzel
-end
-
-# Ghostty
-if confirm-overwrite $config/ghostty
-    log 'Installing ghostty config...'
-    ln -s (realpath config/ghostty) $config/ghostty
-end
-
-# Niri
-if confirm-overwrite $config/niri
-    log 'Installing niri config...'
-    ln -s (realpath config/niri) $config/niri
-end
-
-# Superfile
-if confirm-overwrite $config/superfile
-    log 'Installing superfile config...'
-    ln -s (realpath config/superfile) $config/superfile
-end
-
-# Neovim
-if confirm-overwrite $config/nvim
-    log 'Installing neovim config...'
-    ln -s (realpath config/nvim) $config/nvim
-end
-
-# Dunst
-if confirm-overwrite $config/dunst
-    log 'Installing dunst config...'
-    ln -s (realpath config/dunst) $config/dunst
-end
-
-# Firefox 
-set -l ff_profile (ls ~/.mozilla/firefox/*.default-release | head -n1)
-if test -n "$ff_profile"
-    set -l ff_chrome $ff_profile/chrome
-    mkdir -p $ff_chrome
-    if confirm-overwrite $ff_chrome/userChrome.css
-        log 'Installing Firefox userChrome.css...'
-        ln -s (realpath config/firefox/userChrome.css) $ff_chrome/userChrome.css
+    set -l nvp_file "$nvp_dir/50-limit-free-buffer-pool-in-wayland-compositors.json"
+    run 'Creating NVIDIA profiles directory' as_root mkdir -p "$nvp_dir"
+    begin
+        printf '%s\n' \
+        '{' \
+        '    "rules": [' \
+        '        {' \
+        '            "pattern": {' \
+        '                "feature": "procname",' \
+        '                "matches": "niri"' \
+        '            },' \
+        '            "profile": "Limit Free Buffer Pool On Wayland Compositors"' \
+        '        }' \
+        '    ],' \
+        '    "profiles": [' \
+        '        {' \
+        '            "name": "Limit Free Buffer Pool On Wayland Compositors",' \
+        '            "settings": [' \
+        '                {' \
+        '                    "key": "GLVidHeapReuseRatio",' \
+        '                    "value": 0' \
+        '                }' \
+        '            ]' \
+        '        }' \
+        '    ]' \
+        '}' | as_root tee "$nvp_file" >/dev/null
     end
+    or die "Failed to write $nvp_file"
 end
 
+section 'Dotfiles'
+set -l repo_config_dir "$repo_dir/config"
+
+link_config "$repo_config_dir/starship.toml" "$config_dir/starship.toml"
+link_config "$repo_config_dir/btop" "$config_dir/btop"
+link_config "$repo_config_dir/fish" "$config_dir/fish"
+link_config "$repo_config_dir/fuzzel" "$config_dir/fuzzel"
+link_config "$repo_config_dir/ghostty" "$config_dir/ghostty"
+link_config "$repo_config_dir/niri" "$config_dir/niri"
+link_config "$repo_config_dir/superfile" "$config_dir/superfile"
+link_config "$repo_config_dir/nvim" "$config_dir/nvim"
+link_config "$repo_config_dir/dunst" "$config_dir/dunst"
+
+set -l ff_source "$repo_config_dir/firefox/userChrome.css"
+if test -e "$ff_source"
+    set -l ff_profiles (ls -d ~/.mozilla/firefox/*.default-release 2>/dev/null)
+    if test -n "$ff_profiles"
+        set -l ff_profile $ff_profiles[1]
+        set -l ff_chrome "$ff_profile/chrome"
+        mkdir -p "$ff_chrome"
+        link_config "$ff_source" "$ff_chrome/userChrome.css"
+    else
+        warn 'No Firefox default-release profile found. Skipping userChrome.css.'
+    end
+else
+    warn "Missing $ff_source. Skipping Firefox config."
+end
+
+log 'Done.'
