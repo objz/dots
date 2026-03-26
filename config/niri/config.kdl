@@ -40,10 +40,10 @@ layout {
 spawn-sh-at-startup "wl-paste --type text --watch cliphist store"
 spawn-sh-at-startup "wl-paste --type image --watch cliphist store"
 spawn-sh-at-startup "udiskie --smart-tray"
+spawn-sh-at-startup "surge server"
 spawn-at-startup "discord"
 spawn-at-startup "swww-daemon"
 // spawn-at-startup "fish -c 'randwall ~/pictures/wallpapers'"
-// spawn-sh-at-startup "qs -c ~/source/qs/myawesomeshell"
 
 hotkey-overlay {
     skip-at-startup
@@ -89,7 +89,7 @@ animations {
 
 
 window-rule {
-    geometry-corner-radius 8
+    geometry-corner-radius 4
     clip-to-geometry true
     opacity 0.98
 }
@@ -116,14 +116,18 @@ window-rule {
 }
 
 window-rule {
-    match app-id=r#"^steam_app_.*$"#
+    match app-id="steam_app_.*"
+
     open-fullscreen true
+    open-on-output "DP-1"
+
+    variable-refresh-rate true
 }
 
 output "DP-1" {
-    mode "2560x1440@60.000"
-    position x=2560 y=0
-    transform "90"                
+    mode "2560x1080@144.000"
+    position x=0 y=0
+    focus-at-startup
     variable-refresh-rate
     background-color "#000000"
     backdrop-color "#000000"
@@ -131,17 +135,17 @@ output "DP-1" {
 
 output "DP-2" {
     mode "2560x1080@144.000"
-    position x=0 y=1290
-    focus-at-startup
+    position x=0 y=-1080
+    transform "180"
     variable-refresh-rate
     background-color "#000000"
     backdrop-color "#000000"
 }
 
 output "DP-3" {
-    mode "2560x1080@144.000"
-    position x=0 y=210
-    transform "180"               
+    mode "2560x1440@60.000"
+    position x=2560 y=-1280
+    transform "90"
     variable-refresh-rate
     background-color "#000000"
     backdrop-color "#000000"
@@ -150,7 +154,7 @@ output "DP-3" {
 binds {
     mod+shift+slash { show-hotkey-overlay; }
 
-    mod+t hotkey-overlay-title="open a terminal: ghostty" { spawn "ghostty"; }
+    mod+t hotkey-overlay-title="open a terminal: ghostty" { spawn-sh "ghostty +new-window"; }
     mod+a hotkey-overlay-title="run an application: vicinae" { spawn-sh "vicinae toggle"; }
     // mod+a hotkey-overlay-title="run an application: fuzzel" { spawn "fuzzel"; }
     // mod+x hotkey-overlay-title="open cliboard history: fuzzel" { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
