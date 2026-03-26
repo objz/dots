@@ -2,10 +2,6 @@ function randwall --description 'Random wallpaper via swww'
     set -l WALL_DIR "$argv[1]"
     test -z "$WALL_DIR"; and set WALL_DIR "$HOME/Pictures/wallpapers"
 
-    if not pgrep -u (id -u) -x swww-daemon >/dev/null
-        swww init
-        sleep 0.4
-    end
 
     set -l img (find "$WALL_DIR" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) \
         -print0 | shuf -z -n1 | string split0)
@@ -15,7 +11,7 @@ function randwall --description 'Random wallpaper via swww'
         return 1
     end
 
-    swww img "$img" \
+    awww img "$img" \
         --transition-type any \
         --transition-step 60 \
         --transition-fps 120 \
