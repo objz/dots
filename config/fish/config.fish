@@ -30,6 +30,7 @@ set -gx EDITOR nvim
 set -gx PATH $HOME/.cargo/bin $HOME/.local/bin $HOME/go/bin $PATH
 set -q XDG_DATA_DIRS; or set -gx XDG_DATA_DIRS /usr/local/share:/usr/share
 set -gx XDG_DATA_DIRS $XDG_DATA_DIRS /var/lib/flatpak/exports/share $HOME/.local/share/flatpak/exports/share
+set -gx PATH /opt/brew/bin /opt/brew/sbin $PATH
 
 ulimit -n 4096 
 
@@ -40,6 +41,7 @@ alias ls='eza -1 --icons=auto'
 alias lsa='eza -lha --icons=auto --sort=name --group-directories-first'
 alias lst='eza --icons=auto --tree'
 alias mkdir='mkdir -p'
+alias gw='ionice -c2 -n7 nice -n 10 ./gradlew'
 
 set -gx AUR_HELPER paru
 abbr -a pr   '$AUR_HELPER -Rns'                # remove with deps
@@ -58,10 +60,6 @@ function y
 	rm -f -- "$tmp"
 end
 
-
-if test -x /home/linuxbrew/.linuxbrew/bin/brew
-    eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-end
 
 
 function fish_command_not_found
