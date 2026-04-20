@@ -119,7 +119,7 @@ window-rule {
     match app-id="steam_app_.*"
 
     open-fullscreen true
-    open-on-output "DP-1"
+    open-on-output "DP-2"
 
     variable-refresh-rate true
 }
