@@ -7,6 +7,7 @@ input {
 
     mouse {
         accel-profile "flat"
+        scroll-factor 1.0
     }
 
     focus-follows-mouse max-scroll-amount="95%"
@@ -50,7 +51,7 @@ hotkey-overlay {
 
 prefer-no-csd
 
-screenshot-path "~/pictures/screenshots/screenshot from %y-%m-%d %h-%m-%s.png"
+screenshot-path "~/Pictures/Screenshots/screenshot from %y-%m-%d %h-%m-%s.png"
 
 
 animations {
@@ -124,15 +125,20 @@ window-rule {
 window-rule {
     match app-id="discord"
     open-maximized true
-	open-on-output "DP-3"
+	open-on-output "DP-5"
 
+}
+
+window-rule {
+    match title="Minecraft*"
+    opacity 1.0
 }
 
 window-rule {
     match app-id="steam_app_.*"
 
     open-fullscreen true
-    open-on-output "DP-2"
+    open-on-output "DP-6"
 
     variable-refresh-rate true
 }
@@ -141,10 +147,10 @@ window-rule {
 window-rule {
     match app-id="chrome-music.apple.com__-Default"
     open-maximized true
-    open-on-output "DP-3"
+    open-on-output "DP-5"
 }
 
-output "DP-2" {
+output "DP-6" {
     mode "2560x1080@144.000"
     position x=0 y=0
     focus-at-startup
@@ -153,7 +159,7 @@ output "DP-2" {
     backdrop-color "#000000"
 }
 
-output "DP-1" {
+output "DP-4" {
     mode "2560x1080@144.000"
     position x=0 y=-1080
     transform "180"
@@ -162,11 +168,19 @@ output "DP-1" {
     backdrop-color "#000000"
 }
 
-output "DP-3" {
+output "DP-5" {
     mode "2560x1440@60.000"
     position x=2560 y=-1280
     transform "90"
     variable-refresh-rate
+    background-color "#000000"
+    backdrop-color "#000000"
+}
+
+output "HDMI-A-2" {
+    mode "1920x1080@60.000"
+    position x=0 y=1080
+    scale 1
     background-color "#000000"
     backdrop-color "#000000"
 }
@@ -178,9 +192,9 @@ binds {
     mod+a hotkey-overlay-title="run an application: vicinae" { spawn-sh "vicinae toggle"; }
     // mod+a hotkey-overlay-title="run an application: fuzzel" { spawn "fuzzel"; }
     // mod+x hotkey-overlay-title="open cliboard history: fuzzel" { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
-    mod+x hotkey-overlay-title="open cliboard history: vicinae" { spawn-sh "vicinae vicinae://extensions/vicinae/clipboard/history"; }
+    mod+x hotkey-overlay-title="open cliboard history: vicinae" { spawn-sh "vicinae deeplink vicinae://launch/clipboard/history"; }
     mod+b hotkey-overlay-title="open a browser: firefox" { spawn "firefox"; }
-    alt+r hotkey-overlay-title="change random wallpaper" { spawn-sh "fish -c 'randwall ~/pictures/wallpapers'"; }
+    alt+r hotkey-overlay-title="change random wallpaper" { spawn-sh "fish -c 'randwall ~/Pictures/Wallpapers'"; }
 
 
 
