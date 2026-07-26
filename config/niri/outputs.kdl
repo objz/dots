@@ -1,0 +1,51 @@
+output "DP-6" {
+    mode "2560x1080@144.000"
+    position x=0 y=0
+    focus-at-startup
+    variable-refresh-rate on-demand=true
+    background-color "#000000"
+    backdrop-color "#000000"
+}
+
+output "DP-4" {
+    mode "2560x1080@144.000"
+    position x=0 y=-1080
+    transform "180"
+    variable-refresh-rate on-demand=true
+    background-color "#000000"
+    backdrop-color "#000000"
+}
+
+output "DP-5" {
+    mode "2560x1440@60.000"
+    position x=2560 y=-1280
+    transform "90"
+    variable-refresh-rate on-demand=true
+    background-color "#000000"
+    backdrop-color "#000000"
+
+    layout {
+        preset-column-widths {
+            proportion 0.5
+            proportion 0.75
+            proportion 1.0
+        }
+
+        preset-window-heights {
+            proportion 0.33333
+            proportion 0.5
+            proportion 0.66667
+            proportion 1.0
+        }
+
+        default-column-width { proportion 1.0; }
+    }
+}
+
+output "HDMI-A-2" {
+    mode "1920x1080@60.000"
+    position x=0 y=1080
+    scale 1
+    background-color "#000000"
+    backdrop-color "#000000"
+}

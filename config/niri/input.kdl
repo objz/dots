@@ -1,0 +1,22 @@
+input {
+    keyboard {
+        repeat-delay 250
+        repeat-rate 40
+
+        xkb {
+            layout "us"
+        }
+    }
+
+    mouse {
+        accel-profile "flat"
+        scroll-factor 1.0
+    }
+
+    tablet {
+        map-to-output "HDMI-A-2"
+    }
+
+    focus-follows-mouse max-scroll-amount="95%"
+    workspace-auto-back-and-forth
+}

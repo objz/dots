@@ -1,0 +1,76 @@
+window-rule {
+    geometry-corner-radius 8
+    clip-to-geometry false
+    opacity 0.87
+    draw-border-with-background false
+
+    background-effect {
+        blur true
+        xray false
+    }
+
+    popups {
+        opacity 0.85
+        background-effect {
+            blur true
+            xray false
+        }
+    }
+}
+
+window-rule {
+    match is-floating=true
+
+    shadow {
+        on
+        softness 30
+        spread 3
+        offset x=0 y=4
+        color "#00000060"
+    }
+}
+
+window-rule {
+    match app-id="firefox" title="Picture-in-Picture"
+    open-floating true
+    default-column-width { fixed 480; }
+    default-window-height { fixed 270; }
+    default-floating-position x=24 y=24 relative-to="bottom-right"
+}
+
+window-rule {
+    match app-id="com.saivert.pwvucontrol"
+    open-maximized false
+    open-floating true
+    open-focused true
+    max-height 600
+    max-width 900
+}
+
+window-rule {
+    match app-id="discord"
+    open-maximized true
+    open-on-output "DP-5"
+
+}
+
+window-rule {
+    match title="Minecraft*"
+    opacity 1.0
+}
+
+window-rule {
+    match app-id="steam_app_.*"
+
+    open-fullscreen true
+    open-on-output "DP-6"
+
+    variable-refresh-rate true
+}
+
+
+window-rule {
+    match app-id="chrome-music.apple.com__-Default"
+    open-maximized true
+    open-on-output "DP-5"
+}

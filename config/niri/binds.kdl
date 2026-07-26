@@ -1,0 +1,379 @@
+binds {
+    // Wooting Fn2:
+    //
+    // W = Ctrl
+    // A = Alt
+    // D = Shift
+    //
+    // H/J/K/L keep the same directional meaning everywhere
+
+    mod+return hotkey-overlay-title="open a terminal: ghostty" {
+        spawn-sh "ghostty +new-window";
+    }
+
+    mod+space hotkey-overlay-title="run an application: vicinae" {
+        spawn-sh "vicinae toggle";
+    }
+
+    mod+p hotkey-overlay-title="open clipboard history: vicinae" {
+        spawn-sh "vicinae deeplink vicinae://launch/clipboard/history";
+    }
+
+    mod+b hotkey-overlay-title="open a browser: firefox" {
+        spawn "firefox";
+    }
+
+    mod+o repeat=false {
+        toggle-overview;
+    }
+
+    mod+q repeat=false {
+        close-window;
+    }
+
+    // Caps + Z
+    mod+z hotkey-overlay-title="change random wallpaper" {
+        spawn-sh "fish -c 'randwall ~/Pictures/Wallpapers'";
+    }
+
+
+    // ---------------------------------------------------------
+    // Media
+    // ---------------------------------------------------------
+
+    xf86audioraisevolume allow-when-locked=true {
+        spawn-sh "fish -c 'volctl -o i'";
+    }
+
+    xf86audiolowervolume allow-when-locked=true {
+        spawn-sh "fish -c 'volctl -o d'";
+    }
+
+    xf86audiomute allow-when-locked=true {
+        spawn-sh "fish -c 'volctl -o m'";
+    }
+
+    xf86audiomicmute allow-when-locked=true {
+        spawn-sh "fish -c 'volctl -i m'";
+    }
+
+    xf86audioplay {
+        spawn-sh "fish -c 'volctl -p p'";
+    }
+
+    xf86audionext {
+        spawn-sh "fish -c 'volctl -p n'";
+    }
+
+    xf86audioprev {
+        spawn-sh "fish -c 'volctl -p b'";
+    }
+
+
+    // ---------------------------------------------------------
+    // HJKL — normal navigation
+    //
+    // Caps + H/J/K/L
+    //
+    // Focus locally first, then continue onto a monitor.
+    // ---------------------------------------------------------
+
+    mod+h {
+        focus-column-or-monitor-left;
+    }
+
+    mod+j {
+        focus-window-or-monitor-down;
+    }
+
+    mod+k {
+        focus-window-or-monitor-up;
+    }
+
+    mod+l {
+        focus-column-or-monitor-right;
+    }
+
+
+    // ---------------------------------------------------------
+    // W + HJKL — move
+    //
+    // Caps + W + H/J/K/L
+    //
+    // W = move/change.
+    // ---------------------------------------------------------
+
+    mod+ctrl+h {
+        move-column-left-or-to-monitor-left;
+    }
+
+    mod+ctrl+j {
+        move-window-down-or-to-workspace-down;
+    }
+
+    mod+ctrl+k {
+        move-window-up-or-to-workspace-up;
+    }
+
+    mod+ctrl+l {
+        move-column-right-or-to-monitor-right;
+    }
+
+
+    // ---------------------------------------------------------
+    // D + HJKL — direct monitor navigation
+    //
+    // Caps + D + H/J/K/L
+    // ---------------------------------------------------------
+
+    mod+shift+h {
+        focus-monitor-left;
+    }
+
+    mod+shift+j {
+        focus-monitor-down;
+    }
+
+    mod+shift+k {
+        focus-monitor-up;
+    }
+
+    mod+shift+l {
+        focus-monitor-right;
+    }
+
+
+    // ---------------------------------------------------------
+    // W + D + HJKL — directly move to monitor
+    //
+    // Caps + W + D + H/J/K/L
+    // ---------------------------------------------------------
+
+    mod+ctrl+shift+h {
+        move-column-to-monitor-left;
+    }
+
+    mod+ctrl+shift+j {
+        move-column-to-monitor-down;
+    }
+
+    mod+ctrl+shift+k {
+        move-column-to-monitor-up;
+    }
+
+    mod+ctrl+shift+l {
+        move-column-to-monitor-right;
+    }
+
+
+    // ---------------------------------------------------------
+    // A + J/K — workspace navigation
+    //
+    // Caps + A + J/K
+    // ---------------------------------------------------------
+
+    mod+alt+j {
+        focus-workspace-down;
+    }
+
+    mod+alt+k {
+        focus-workspace-up;
+    }
+
+
+    // ---------------------------------------------------------
+    // A + W + Space — move to a fresh workspace
+    //
+    // Caps + A + W + Space
+    //
+    // A = workspace
+    // W = move
+    // Space = new empty space
+    //
+    // A very large workspace index resolves to the bottommost
+    // empty workspace.
+    // ---------------------------------------------------------
+
+    mod+alt+ctrl+space {
+        move-column-to-workspace 99;
+    }
+
+
+    // ---------------------------------------------------------
+    // A + D + J/K — move the whole workspace
+    //
+    // Caps + A + D + J/K
+    // ---------------------------------------------------------
+
+    mod+alt+shift+j {
+        move-workspace-down;
+    }
+
+    mod+alt+shift+k {
+        move-workspace-up;
+    }
+
+
+    // ---------------------------------------------------------
+    // Window grouping
+    // ---------------------------------------------------------
+
+    mod+bracketleft {
+        consume-or-expel-window-left;
+    }
+
+    mod+bracketright {
+        consume-or-expel-window-right;
+    }
+
+
+    // ---------------------------------------------------------
+    // Resize family
+    //
+    // W = horizontal / width
+    // D = vertical / height
+    // A = alternate/reset
+    //
+    // Caps + W + R         cycle width
+    // Caps + D + R         cycle height
+    //
+    // Caps + A + W + R     reset width
+    // Caps + A + D + R     reset height
+    // ---------------------------------------------------------
+
+    mod+ctrl+r {
+        switch-preset-column-width;
+    }
+
+    mod+shift+r {
+        switch-preset-window-height;
+    }
+
+    mod+alt+ctrl+r {
+        spawn-sh "~/.config/niri/scripts/reset-width.sh";
+    }
+
+    mod+alt+shift+r {
+        reset-window-height;
+    }
+
+
+    // ---------------------------------------------------------
+    // Fine resizing
+    //
+    // W = width
+    // D = height
+    // ---------------------------------------------------------
+
+    mod+ctrl+minus {
+        set-column-width "-10%";
+    }
+
+    mod+ctrl+equal {
+        set-column-width "+10%";
+    }
+
+    mod+shift+minus {
+        set-window-height "-10%";
+    }
+
+    mod+shift+equal {
+        set-window-height "+10%";
+    }
+
+
+    // ---------------------------------------------------------
+    // F family
+    //
+    // Caps + F       maximize
+    // Caps + W + F   fullscreen
+    // Caps + D + F   fill available width
+    // ---------------------------------------------------------
+
+    mod+f {
+        maximize-column;
+    }
+
+    mod+ctrl+f {
+        fullscreen-window;
+    }
+
+    mod+shift+f {
+        expand-column-to-available-width;
+    }
+
+
+    // ---------------------------------------------------------
+    // C family
+    //
+    // Caps + C       center current column
+    // Caps + W + C   center all visible columns
+    // ---------------------------------------------------------
+
+    mod+c {
+        center-column;
+    }
+
+    mod+ctrl+c {
+        center-visible-columns;
+    }
+
+
+    // ---------------------------------------------------------
+    // N family
+    //
+    // Caps + N       toggle floating
+    // Caps + D + N   switch focus floating / tiling
+    // ---------------------------------------------------------
+
+    mod+n {
+        toggle-window-floating;
+    }
+
+    mod+shift+n {
+        switch-focus-between-floating-and-tiling;
+    }
+
+
+    // ---------------------------------------------------------
+    // Tabs
+    // ---------------------------------------------------------
+
+    mod+t {
+        toggle-column-tabbed-display;
+    }
+
+
+    // ---------------------------------------------------------
+    // Screenshots
+    // ---------------------------------------------------------
+
+    print {
+        screenshot;
+    }
+
+    ctrl+print {
+        screenshot-screen;
+    }
+
+    alt+print {
+        screenshot-window;
+    }
+
+
+    // ---------------------------------------------------------
+    // Niri
+    // ---------------------------------------------------------
+
+    mod+slash {
+        show-hotkey-overlay;
+    }
+
+    mod+escape allow-inhibiting=false {
+        toggle-keyboard-shortcuts-inhibit;
+    }
+
+    ctrl+alt+delete {
+        quit;
+    }
+}

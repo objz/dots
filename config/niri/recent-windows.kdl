@@ -1,0 +1,20 @@
+recent-windows {
+    debounce-ms 500
+    open-delay-ms 120
+
+    highlight {
+        padding 18
+        corner-radius 8
+    }
+
+    previews {
+        max-height 520
+        max-scale 0.5
+    }
+
+    binds {
+        mod+tab {
+            next-window scope="output";
+        }
+    }
+}

@@ -1,0 +1,39 @@
+layout {
+    gaps 16
+
+    center-focused-column "never"
+    always-center-single-column
+
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+    }
+
+    default-column-width { proportion 0.5; }
+    focus-ring {
+        width 1.6
+
+        active-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
+    }
+
+    border {
+        off
+    }
+
+    tab-indicator {
+        on
+        hide-when-single-tab
+        place-within-column
+        gap 4
+        width 4
+        length total-proportion=0.8
+        position "right"
+        gaps-between-tabs 2
+        corner-radius 8
+    }
+
+    insert-hint {
+        gradient from="#50505080" to="#80808080" angle=45 relative-to="workspace-view"
+    }
+}
