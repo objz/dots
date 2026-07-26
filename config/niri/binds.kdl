@@ -287,7 +287,7 @@ binds {
     //
     // Caps + F       maximize
     // Caps + W + F   fullscreen
-    // Caps + D + F   fill available width
+    // Caps + A + F   fill available width
     // ---------------------------------------------------------
 
     mod+f {
@@ -298,7 +298,7 @@ binds {
         fullscreen-window;
     }
 
-    mod+shift+f {
+    mod+alt+f {
         expand-column-to-available-width;
     }
 
