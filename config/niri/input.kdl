@@ -17,6 +17,6 @@ input {
         map-to-output "HDMI-A-2"
     }
 
-    focus-follows-mouse max-scroll-amount="95%"
+    focus-follows-mouse max-scroll-amount="0%"
     workspace-auto-back-and-forth
 }
