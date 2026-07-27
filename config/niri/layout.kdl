@@ -15,6 +15,7 @@ layout {
         width 1.6
 
         active-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
+        inactive-color "#00000000"
     }
 
     border {
