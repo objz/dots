@@ -19,7 +19,7 @@ end
 starship init fish | source
 zoxide init fish --cmd cd| source
 envm export | source
-elio shell init fish
+elio shell init fish | source
 
 # Environment / PATH
 if type -q archlinux-java
