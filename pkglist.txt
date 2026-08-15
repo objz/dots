@@ -22,7 +22,7 @@ udiskie
 unzip
 ly
 wl-clipboard
-yazi
+elio-git
 zoxide
 fish
 starship

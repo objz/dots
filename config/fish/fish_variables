@@ -4,4 +4,4 @@ SETUVAR --export XDG_CURRENT_DESKTOP:wlroots
 SETUVAR --export XDG_SESSION_DESKTOP:wlroots
 SETUVAR --export XDG_SESSION_TYPE:wayland
 SETUVAR __fish_initialized:4300
-SETUVAR fish_user_paths:/usr/local/texlive/2026/bin/x86_64\x2dlinux
+SETUVAR --export fish_user_paths:/home/consti/\x2elocal/bin\x1e/usr/local/texlive/2026/bin/x86_64\x2dlinux

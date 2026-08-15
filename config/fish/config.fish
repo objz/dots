@@ -19,6 +19,7 @@ end
 starship init fish | source
 zoxide init fish --cmd cd| source
 envm export | source
+elio shell init fish
 
 # Environment / PATH
 if type -q archlinux-java
@@ -51,14 +52,14 @@ abbr -a lr   '$AUR_HELPER -Ss'                 # search repo
 abbr -a ca   '$AUR_HELPER -Sc'                 # clean cache
 abbr -a cu   '$AUR_HELPER -Qtdq | $AUR_HELPER -Rns -'  # remove orphans
 
-function y
-	set tmp (mktemp -t "yazi-cwd.XXXXXX")
-	command yazi $argv --cwd-file="$tmp"
-	if read -z cwd < "$tmp"; and [ "$cwd" != "$PWD" ]; and test -d "$cwd"
-		builtin cd -- "$cwd"
-	end
-	rm -f -- "$tmp"
-end
+# function y
+# 	set tmp (mktemp -t "yazi-cwd.XXXXXX")
+#	command yazi $argv --cwd-file="$tmp"
+#	if read -z cwd < "$tmp"; and [ "$cwd" != "$PWD" ]; and test -d "$cwd"
+#		builtin cd -- "$cwd"
+#	end
+#	rm -f -- "$tmp"
+# end
 
 
 
