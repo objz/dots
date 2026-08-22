@@ -50,7 +50,7 @@ window-rule {
 window-rule {
     match app-id="discord"
     open-maximized true
-    open-on-output "DP-5"
+    open-on-output "DP-6"
 
 }
 
@@ -62,8 +62,8 @@ window-rule {
 window-rule {
     match app-id="steam_app_.*"
 
-    open-fullscreen true
-    open-on-output "DP-6"
+    open-fullscreen false
+    open-on-output "DP-4"
 
     variable-refresh-rate true
 }
@@ -72,5 +72,5 @@ window-rule {
 window-rule {
     match app-id="chrome-music.apple.com__-Default"
     open-maximized true
-    open-on-output "DP-5"
+    open-on-output "DP-6"
 }

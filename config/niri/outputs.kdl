@@ -1,4 +1,4 @@
-output "DP-6" {
+output "DP-4" {
     mode "2560x1080@144.000"
     position x=0 y=0
     focus-at-startup
@@ -7,7 +7,7 @@ output "DP-6" {
     backdrop-color "#000000"
 }
 
-output "DP-4" {
+output "DP-5" {
     mode "2560x1080@144.000"
     position x=0 y=-1080
     transform "180"
@@ -16,7 +16,7 @@ output "DP-4" {
     backdrop-color "#000000"
 }
 
-output "DP-5" {
+output "DP-6" {
     mode "2560x1440@60.000"
     position x=2560 y=-1280
     transform "90"
