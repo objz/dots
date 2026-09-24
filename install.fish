@@ -164,6 +164,29 @@ function link_config -a source target
     end
 end
 
+function hardlink_config -a source target
+    if not test -e "$source"
+        warn "Missing $source. Skipping."
+        return 0
+    end
+
+    set -l resolved_source (resolve_path "$source")
+
+    if test -e "$target"
+        if test (stat -Lc '%d:%i' "$resolved_source") = (stat -Lc '%d:%i' "$target")
+            log "$target already hard-linked"
+            return 0
+        end
+    end
+
+    mkdir -p (dirname "$target")
+
+    if confirm_overwrite "$target"
+        ln "$resolved_source" "$target"
+        log "Hard-linked $target"
+    end
+end
+
 function maybe_backup_config -a config_dir
     log 'Before continuing, consider backing up your config directory.'
     if test "$auto_overwrite" = '1'
@@ -427,6 +450,20 @@ if test -d "$repo_config_dir"
             if test "$name" = 'firefox'
                 continue
             end
+
+            if test "$name" = 'opencode'
+                set -l opencode_target "$config_dir/opencode"
+                mkdir -p "$opencode_target"
+
+                for item in AGENTS.md cli.json skills
+                    link_config "$entry/$item" "$opencode_target/$item"
+                end
+
+                hardlink_config "$entry/opencode.jsonc" "$opencode_target/opencode.jsonc"
+                link_config "$entry/.ponytail-active" "$opencode_target/.ponytail-active"
+                continue
+            end
+
             link_config "$entry" "$config_dir/$name"
         end
     end

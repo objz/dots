@@ -1,0 +1,18 @@
+{
+  "theme": {
+    "name": "opencode",
+    "mode": "system"
+  },
+  "animations": true,
+  "session": {
+    "scrollbar": true,
+    "thinking": "show",
+    "markdown": "rendered"
+  },
+  "tabs": {
+    "layout": "horizontal"
+  },
+  "attention": {
+    "enabled": true
+  }
+}

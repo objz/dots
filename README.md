@@ -19,7 +19,8 @@ the `install.fish` script is for arch-based systems. you need `fish`, `git`, `su
 * optional extras with `--opt`
 * nvidia stack + profile fix with `--nvidia`
 * sets gtk filechooser portal pref, sets gnome color-scheme dark, enables services (`dunst`, `xwayland-satellite`, `ly`)
-* symlinks configs from repo into `$XDG_CONFIG_HOME` (`starship`, `fish`, `fuzzel`, `ghostty`, `niri`, `superfile`, `nvim`, `dunst`, `btop`)
+* symlinks configs from repo into `$XDG_CONFIG_HOME` (`starship`, `fish`, `ghostty`, `niri`, `nvim`, `dunst`, `btop`)
+* links OpenCode settings, global instructions, and skills individually so runtime credentials and dependencies stay outside the repository
 * firefox: copies `userChrome.css` into default profile if found
 
 ### usage
